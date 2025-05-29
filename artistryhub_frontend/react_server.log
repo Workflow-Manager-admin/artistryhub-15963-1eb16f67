@@ -19,3 +19,31 @@ To create a production build, use npm run build.
 
 webpack compiled successfully
 Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Failed to compile.
+
+Module not found: Error: Can't resolve 'react-router-dom' in '/home/kavia/workspace/code-generation/artistryhub-15963-1eb16f67/artistryhub_frontend/src'
+ERROR in ./src/index.js 8:0-49
+Module not found: Error: Can't resolve 'react-router-dom' in '/home/kavia/workspace/code-generation/artistryhub-15963-1eb16f67/artistryhub_frontend/src'
+
+webpack compiled with 1 error
+Compiling...
+Failed to compile.
+
+Module not found: Error: Can't resolve 'react-router-dom' in '/home/kavia/workspace/code-generation/artistryhub-15963-1eb16f67/artistryhub_frontend/src'
+LOG from webpack.FileSystemInfo
+<w> Managed item /home/kavia/workspace/code-generation/artistryhub-15963-1eb16f67/artistryhub_frontend/node_modules/react-router-dom isn't a directory or doesn't contain a package.json (see snapshot.managedPaths option)
++ 13 hidden lines
+
+ERROR in ./src/index.js 8:0-49
+Module not found: Error: Can't resolve 'react-router-dom' in '/home/kavia/workspace/code-generation/artistryhub-15963-1eb16f67/artistryhub_frontend/src'
+
+webpack compiled with 1 error
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
