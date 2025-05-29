@@ -1,10 +1,15 @@
-// PUBLIC_INTERFACE
 import React from 'react';
 import './App.css';
 import NavigationBar from './components/NavigationBar';
+import Sidebar from './components/Sidebar';
 import HeroSection from './components/HeroSection';
 import PortfolioGrid from './components/PortfolioGrid';
-import Sidebar from './components/Sidebar';
+import { Routes, Route } from 'react-router-dom';
+
+// Importing new page components
+import Portfolios from './pages/Portfolios';
+import Marketplace from './pages/Marketplace';
+import UserProfile from './pages/UserProfile';
 
 // PUBLIC_INTERFACE
 function App() {
@@ -16,11 +21,24 @@ function App() {
       {/* Main Layout: flex row for content and sidebar */}
       <main className="main-container">
         <div className="main-content">
-          {/* HERO SECTION */}
-          <HeroSection />
-
-          {/* Portfolios & Marketplace Grid */}
-          <PortfolioGrid />
+          <Routes>
+            {/* Root path: Render the original hero/landing layout */}
+            <Route
+              path="/"
+              element={
+                <>
+                  <HeroSection />
+                  <PortfolioGrid />
+                </>
+              }
+            />
+            {/* Portfolios page */}
+            <Route path="/portfolios" element={<Portfolios />} />
+            {/* Marketplace page */}
+            <Route path="/marketplace" element={<Marketplace />} />
+            {/* User Profile page */}
+            <Route path="/profile" element={<UserProfile />} />
+          </Routes>
         </div>
         {/* SIDEBAR: Stories & Custom Orders */}
         <Sidebar />
