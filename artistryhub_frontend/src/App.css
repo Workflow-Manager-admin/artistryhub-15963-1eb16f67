@@ -3,6 +3,12 @@
   --primary-color: #800000;     /* Elegant Maroon */
   --secondary-color: #FFFFFF;   /* Crisp White */
   --accent-color: #FFD700;      /* Gold Accent */
+  --navbar-link-gap: 1.5rem;
+  --navbar-link-weight: 550;
+  --navbar-link-radius: 7px;
+  --navbar-link-padding: 0.42em 1em;
+  --navbar-link-hover-bg: rgba(255, 215, 0, 0.13);
+  --navbar-logo-shadow: 0 2px 10px #FFD70066;
 
   --background-color: var(--secondary-color);
   --surface-color: #faf7f5;
