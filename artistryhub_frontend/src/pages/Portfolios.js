@@ -4,21 +4,30 @@ import React, { useEffect, useState } from "react";
 /**
  * Portfolios Page
  * Displays artist portfolios: Showcases great artworks in a rich portfolio gallery.
- * Fetches and displays a visually appealing grid of real-time images, enhanced with interactivity.
- * Dynamic image fetching, like toggling, comment input, and share (copy link) offered on both card and modal.
+ * Fetches and displays a visually appealing grid of real-time images,
+ * enhanced with interactivity: Like (toggle), Comment (input/list & modal/local), and Share (copy link).
+ * All state logic and feedback handled on the frontend only.
  */
 function Portfolios() {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [modal, setModal] = useState({ open: false, img: null });
-  const [likes, setLikes] = useState({}); // { [img.id]: boolean }
-  const [comments, setComments] = useState({}); // { [img.id]: [string] }
-  const [commentInput, setCommentInput] = useState({}); // { [img.id]: string }
-  const [shareMessage, setShareMessage] = useState({}); // { [img.id]: string }
 
+  // Modal state: { open: bool, img: <imgObj or null> }
+  const [modal, setModal] = useState({ open: false, img: null });
+
+  // Like state: { [img.id]: boolean }
+  const [likes, setLikes] = useState({});
+  // Comments: { [img.id]: [string] }
+  const [comments, setComments] = useState({});
+  // Current unsubmitted comment text per image: { [img.id]: string }
+  const [commentInput, setCommentInput] = useState({});
+  // Share and feedback: { [img.id]: string }
+  const [shareMessage, setShareMessage] = useState({});
+
+  // --- Modal (Lightbox) logic ---
   // PUBLIC_INTERFACE
-  /** Open the image modal/lightbox */
+  /** Open the image modal/lightbox for a gallery image */
   const handleOpenModal = (img) => {
     setModal({ open: true, img });
     document.body.style.overflow = "hidden";
@@ -26,7 +35,7 @@ function Portfolios() {
   };
 
   // PUBLIC_INTERFACE
-  /** Close the modal */
+  /** Closes the modal (and resets share feedback) */
   const handleCloseModal = () => {
     setModal({ open: false, img: null });
     document.body.style.overflow = "";
@@ -34,29 +43,26 @@ function Portfolios() {
   };
 
   // PUBLIC_INTERFACE
-  /** Allow closing modal with ESC key */
+  /** Allows closing modal by pressing the ESC key */
   useEffect(() => {
     if (!modal.open) return;
-    function onEsc(e) {
+    const escHandler = (e) => {
       if (e.key === "Escape") handleCloseModal();
-    }
-    window.addEventListener("keydown", onEsc);
-    return () => window.removeEventListener("keydown", onEsc);
-    // eslint-disable-next-line
+    };
+    window.addEventListener("keydown", escHandler);
+    return () => window.removeEventListener("keydown", escHandler);
   }, [modal.open]);
-
+  
   // PUBLIC_INTERFACE
-  // Fetch 12 random images from the public picsum.photos API dynamically
+  /** Fetch 12 random images from the public API for gallery cards */
   useEffect(() => {
-    const fetchImages = async () => {
+    async function fetchImages() {
       setLoading(true);
       setError(null);
       try {
-        // Fetch image list from the public API (can swap source if desired; here: picsum)
-        const res = await fetch('https://picsum.photos/v2/list?page=1&limit=12');
-        if (!res.ok) throw new Error('Failed to load images');
+        const res = await fetch("https://picsum.photos/v2/list?page=1&limit=12");
+        if (!res.ok) throw new Error();
         const data = await res.json();
-        // Map fetched data to suit card display
         const imgData = data.map((img, i) => ({
           url: `https://picsum.photos/id/${img.id}/450/300`,
           alt: img.author ? `Work by ${img.author}` : `Art Portfolio ${i + 1}`,
@@ -67,53 +73,55 @@ function Portfolios() {
         setImages(imgData);
       } catch (err) {
         setImages([]);
-        setError('Sorry, we could not load the gallery. Please try again later.');
+        setError("Sorry, we could not load the gallery. Please try again later.");
       }
       setLoading(false);
-    };
+    }
     fetchImages();
   }, []);
 
-  // Likes handling
+  // --- Like/Unlike toggle (simulate like) ---
   // PUBLIC_INTERFACE
   const handleLikeToggle = (imgId) => {
     setLikes((prev) => ({
       ...prev,
-      [imgId]: !prev[imgId]
+      [imgId]: !prev[imgId],
     }));
   };
 
-  // Comment input handling
+  // --- Comment Input + Submission (mock only: local frontend state) ---
+  // Comment input update
   // PUBLIC_INTERFACE
-  const handleCommentChange = (imgId, text) => {
+  const handleCommentChange = (imgId, value) => {
     setCommentInput((prev) => ({
       ...prev,
-      [imgId]: text
+      [imgId]: value,
     }));
   };
+  // Submission logic (updates local list, clears field, flashes feedback in modal)
   // PUBLIC_INTERFACE
   const handleCommentSubmit = (imgId, inModal = false) => {
-    const text = (commentInput[imgId] || "").trim();
-    if (!text) return;
+    const val = (commentInput[imgId] || "").trim();
+    if (!val) return;
     setComments((prev) => ({
       ...prev,
-      [imgId]: [...(prev[imgId] || []), text]
+      [imgId]: [...(prev[imgId] || []), val],
     }));
     setCommentInput((prev) => ({
       ...prev,
-      [imgId]: ""
+      [imgId]: "",
     }));
-    // Simulate a flash message on modal
+    // Add flash message in modal if desired
     if (inModal && typeof window !== "undefined") {
       setShareMessage((prev) => ({
         ...prev,
-        [imgId]: "Comment added!"
+        [imgId]: "Comment added!",
       }));
-      setTimeout(() => setShareMessage((prev) => ({ ...prev, [imgId]: "" })), 1000);
+      setTimeout(() => setShareMessage((prev) => ({ ...prev, [imgId]: "" })), 1200);
     }
   };
 
-  // Share = copy image url to clipboard & show feedback
+  // --- Share logic: copy to clipboard simulation + feedback ---
   // PUBLIC_INTERFACE
   const handleShare = async (img, inModal = false) => {
     const link = window.location.origin + "/portfolios?img=" + img.id;
@@ -121,70 +129,102 @@ function Portfolios() {
       await navigator.clipboard.writeText(link);
       setShareMessage((prev) => ({
         ...prev,
-        [img.id]: "Copied gallery link!"
+        [img.id]: "Copied gallery link!",
       }));
-      setTimeout(() => setShareMessage((prev) => ({ ...prev, [img.id]: "" })), 1200);
+      setTimeout(
+        () =>
+          setShareMessage((prev) => ({
+            ...prev,
+            [img.id]: "",
+          })),
+        1300
+      );
     } catch (err) {
       setShareMessage((prev) => ({
         ...prev,
-        [img.id]: "Failed to copy link"
+        [img.id]: "Failed to copy link",
       }));
-      setTimeout(() => setShareMessage((prev) => ({ ...prev, [img.id]: "" })), 1300);
+      setTimeout(
+        () =>
+          setShareMessage((prev) => ({
+            ...prev,
+            [img.id]: "",
+          })),
+        1300
+      );
     }
   };
 
-  // Helper: render interactive control bar for card or modal
+  // --- Control bar of interactivity below each card (or modal) ---
   // PUBLIC_INTERFACE
   const Controls = ({ img, isModal }) => (
-    <div style={{
-      display: 'flex',
-      gap: 18,
-      alignItems: 'center',
-      margin: isModal ? "1em 0 0.35em 0" : "0.6em 0 0.1em 0",
-      flexWrap: 'wrap',
-      borderTop: isModal ? "1.5px solid #e1d2c8" : undefined,
-      paddingTop: isModal ? 14 : 0,
-      justifyContent: isModal ? "flex-start" : "space-between"
-    }}>
-      {/* Like button */}
+    <div
+      style={{
+        display: "flex",
+        gap: 16,
+        alignItems: "center",
+        margin: isModal ? "1em 0 0.3em 0" : "0.6em 0 0.1em 0",
+        flexWrap: "wrap",
+        borderTop: isModal ? "1.4px solid #e1d2c8" : undefined,
+        paddingTop: isModal ? 13 : 0,
+        justifyContent: isModal ? "flex-start" : "space-between",
+        zIndex: 2,
+      }}
+    >
+      {/* Like toggle button */}
       <button
         style={{
-          background: likes[img.id] ? "linear-gradient(92deg,#FFD700 60%,#800000 120%)" : "#f7eee2",
+          background: likes[img.id]
+            ? "linear-gradient(93deg,#FFD700 60%,#800000 120%)"
+            : "#f8eee4",
           color: likes[img.id] ? "#800000" : "#a07720",
-          border: likes[img.id] ? "2px solid #FFD700" : "1.5px solid #d9c7b6", 
-          boxShadow: "0 2px 7px #ffd70034",
+          border: likes[img.id]
+            ? "2px solid #FFD700"
+            : "1.3px solid #d9c7b6",
+          boxShadow: "0 2px 9px #ffd70033",
           borderRadius: 7,
           fontWeight: 700,
           padding: "6px 13px",
-          fontSize: "1.02rem",
-          marginRight: 10,
+          fontSize: "1.01rem",
+          marginRight: 7,
           cursor: "pointer",
           outline: "none",
         }}
         aria-pressed={!!likes[img.id]}
-        onClick={e => {
-          e.stopPropagation(); handleLikeToggle(img.id);
+        onClick={(e) => {
+          e.stopPropagation();
+          handleLikeToggle(img.id);
+        }}
+        title={likes[img.id] ? "Unlike" : "Like"}
+      >
+        <span role="img" aria-label="like">
+          ❤️
+        </span>{" "}
+        Like{likes[img.id] ? "d" : ""}
+      </button>
+      {/* Simulated like count */}
+      <span
+        style={{
+          fontSize: "0.98em",
+          minWidth: 34,
+          color: "#86656b",
         }}
       >
-        <span role="img" aria-label="like">❤️</span> Like{likes[img.id] ? "d" : ""}
-      </button>
-      {/* Like count simulation */}
-      <span style={{
-        fontSize: "0.97em",
-        minWidth: 38,
-        color: "#86656b"
-      }}>
         {likes[img.id] ? "1 like" : "0 likes"}
       </span>
-      {/* Comment input */}
+      {/* Comment input/field */}
       <form
-        onSubmit={e => { e.preventDefault(); handleCommentSubmit(img.id, isModal); }}
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleCommentSubmit(img.id, isModal);
+        }}
         style={{
           display: "inline-flex",
           alignItems: "center",
           margin: "0 0.6em",
-          gap: 4
-        }}>
+          gap: 4,
+        }}
+      >
         <input
           style={{
             fontSize: "1em",
@@ -192,27 +232,39 @@ function Portfolios() {
             border: "1px solid #dcc5a4",
             padding: "5px 8px",
             marginRight: 4,
-            width: isModal ? 170 : 87,
+            width: isModal ? 160 : 87,
             background: "#fffbe6",
-            outline: "none"
+            outline: "none",
           }}
           type="text"
           aria-label="Add a comment"
           maxLength={120}
-          placeholder={comments[img.id]?.length
-            ? "Add another comment"
-            : "Add a comment"}
+          placeholder={
+            comments[img.id]?.length
+              ? "Add another comment"
+              : "Add a comment"
+          }
           value={commentInput[img.id] || ""}
-          onChange={e => handleCommentChange(img.id, e.target.value)}
+          onChange={(e) =>
+            handleCommentChange(img.id, e.target.value)
+          }
         />
-        <button type="submit"
+        <button
+          type="submit"
           style={{
-            background: "linear-gradient(92deg,#FFD700 60%,#800000 120%)",
+            background:
+              "linear-gradient(92deg,#FFD700 60%,#800000 120%)",
             color: "#800000",
-            border: "none", borderRadius: 6, fontWeight: 700,
-            padding: "5px 11px", cursor: "pointer", fontSize: "1em"
+            border: "none",
+            borderRadius: 6,
+            fontWeight: 700,
+            padding: "5px 11px",
+            cursor: "pointer",
+            fontSize: "1em",
           }}
-        >Send</button>
+        >
+          Send
+        </button>
       </form>
       {/* Share button */}
       <button
@@ -226,54 +278,70 @@ function Portfolios() {
           fontSize: "1.01rem",
           marginLeft: 6,
           cursor: "pointer",
-          outline: "none"
+          outline: "none",
         }}
         aria-label="Copy direct gallery link"
         type="button"
-        onClick={e => { e.stopPropagation(); handleShare(img, isModal); }}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleShare(img, isModal);
+        }}
       >
-        <span role="img" aria-label="share">🔗</span> Share
+        <span role="img" aria-label="share">
+          🔗
+        </span>{" "}
+        Share
       </button>
       {/* Share feedback */}
-      {shareMessage[img.id]
-        ? <span style={{
+      {shareMessage[img.id] ? (
+        <span
+          style={{
             color: "#FFD700",
             background: "#221",
             borderRadius: 7,
             padding: "2px 8px",
             marginLeft: 7,
-            fontSize: "0.95em",
+            fontSize: "0.945em",
             fontWeight: 500,
             boxShadow: "0 1px 8px #FFD70033",
-            letterSpacing: "0.01em"
+            letterSpacing: "0.01em",
           }}
-          >{shareMessage[img.id]}</span>
-        : null}
+        >
+          {shareMessage[img.id]}
+        </span>
+      ) : null}
     </div>
   );
 
-  // Comments list
+  // --- Comments List (simulated, under each card/modal) ---
   const CommentsBlock = ({ imgId, isModal }) => {
-    const commentsList = comments[imgId] || [];
-    return commentsList.length ? (
-      <ul style={{
-        margin: isModal ? "0.5em 0 0.4em 0" : "0.45em 0 0.21em 0",
-        padding: "0 0 0 1.1em",
-        fontSize: "0.98em",
-        color: "#703515",
-        maxHeight: isModal ? 88 : 40,
-        overflowY: "auto",
-        background: isModal ? "#fff9ec" : "#fff8e13c",
-        borderRadius: isModal ? 5 : 3,
-        boxShadow: isModal ? "0 1px 7px #FFD70029" : "none"
-      }}>
-        {commentsList.map((cmt, idx) => (
-          <li key={idx} style={{ padding: "2px 0" }}>💬 {cmt}</li>
+    const list = comments[imgId] || [];
+    return list.length ? (
+      <ul
+        style={{
+          margin: isModal
+            ? "0.5em 0 0.33em 0"
+            : "0.41em 0 0.17em 0",
+          padding: "0 0 0 1.08em",
+          fontSize: "0.98em",
+          color: "#703515",
+          maxHeight: isModal ? 100 : 44,
+          overflowY: "auto",
+          background: isModal ? "#fff9ec" : "#fff8e13c",
+          borderRadius: isModal ? 6 : 3,
+          boxShadow: isModal ? "0 1px 7px #FFD70028" : "none",
+        }}
+      >
+        {list.map((cmt, i) => (
+          <li key={i} style={{ padding: "2px 0" }}>
+            💬 {cmt}
+          </li>
         ))}
       </ul>
     ) : null;
   };
 
+  // --- Main Render ---
   return (
     <section className="main-content__page">
       <h1 className="title">Artist Portfolios</h1>
@@ -287,7 +355,12 @@ function Portfolios() {
         {loading ? (
           <div className="card">Loading images...</div>
         ) : error ? (
-          <div className="card" style={{ color: "#b00", fontWeight: 500 }}>{error}</div>
+          <div
+            className="card"
+            style={{ color: "#b00", fontWeight: 500 }}
+          >
+            {error}
+          </div>
         ) : (
           <div className="portfolio-grid__container">
             {images.map((img, i) => (
@@ -297,13 +370,13 @@ function Portfolios() {
                 tabIndex={0}
                 aria-label={img.label + " by " + img.artist}
                 style={{
-                  transition: "transform 0.18s, box-shadow 0.18s",
-                  outline: "none",
                   cursor: "pointer",
-                  position: "relative"
+                  position: "relative",
+                  outline: "none",
+                  transition: "transform 0.18s, box-shadow 0.18s",
                 }}
                 onClick={() => handleOpenModal(img)}
-                onKeyPress={e => {
+                onKeyPress={(e) => {
                   if (e.key === "Enter" || e.key === " ") handleOpenModal(img);
                 }}
               >
@@ -321,12 +394,17 @@ function Portfolios() {
                   }}
                   loading="lazy"
                   draggable={false}
-                  onError={e => { e.target.style.opacity = 0.3; e.target.alt = "Failed to load"; }}
+                  onError={(e) => {
+                    e.target.style.opacity = 0.3;
+                    e.target.alt = "Failed to load";
+                  }}
                 />
                 {/* Overlay on hover/focus with image details */}
                 <div className="portfolio-card__overlay">
                   <div>
-                    <div className="portfolio-card__overlay-label">{img.label}</div>
+                    <div className="portfolio-card__overlay-label">
+                      {img.label}
+                    </div>
                     <div className="portfolio-card__overlay-artist">
                       by <b>{img.artist}</b>
                     </div>
@@ -334,7 +412,7 @@ function Portfolios() {
                       className="portfolio-card__overlay-btn"
                       tabIndex={-1}
                       aria-label="View fullscreen"
-                      onClick={e => {
+                      onClick={(e) => {
                         e.stopPropagation();
                         handleOpenModal(img);
                       }}
@@ -343,18 +421,25 @@ function Portfolios() {
                     </button>
                   </div>
                 </div>
-                <div className="portfolio-card__label" style={{ marginBottom: "0.6em" }}>
-                  <span style={{ color: "#800000", fontWeight: 600 }}>{img.label}</span>
-                  <span style={{
-                    color: "#86656b",
-                    fontWeight: 400,
-                    marginLeft: 10,
-                    fontSize: "0.99em"
-                  }}>
+                <div
+                  className="portfolio-card__label"
+                  style={{ marginBottom: "0.5em" }}
+                >
+                  <span style={{ color: "#800000", fontWeight: 600 }}>
+                    {img.label}
+                  </span>
+                  <span
+                    style={{
+                      color: "#86656b",
+                      fontWeight: 400,
+                      marginLeft: 10,
+                      fontSize: "0.99em",
+                    }}
+                  >
                     by {img.artist}
                   </span>
                 </div>
-                {/* Controls: like, comment, share */}
+                {/* Interactive controls: Like, Comment, Share */}
                 <Controls img={img} isModal={false} />
                 <CommentsBlock imgId={img.id} isModal={false} />
               </div>
@@ -362,16 +447,19 @@ function Portfolios() {
           </div>
         )}
       </div>
-      {/* Modal Lightbox */}
-      {modal.open && (
-        <div className="image-modal-backdrop" onClick={handleCloseModal}>
+      {/* Modal (Lightbox gallery view) */}
+      {modal.open && modal.img && (
+        <div
+          className="image-modal-backdrop"
+          onClick={handleCloseModal}
+        >
           <div
             className="image-modal"
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
             tabIndex={0}
             role="dialog"
             aria-modal="true"
-            style={{minWidth:280}}
+            style={{ minWidth: 280 }}
           >
             <button
               className="image-modal__close"
@@ -389,7 +477,7 @@ function Portfolios() {
                 maxWidth: "86vw",
                 maxHeight: "68vh",
                 borderRadius: "13px",
-                background: "#faf7f5"
+                background: "#faf7f5",
               }}
               draggable={false}
             />
@@ -398,7 +486,7 @@ function Portfolios() {
               <div style={{ color: "#86656b", marginBottom: "0.35em" }}>
                 by {modal.img.artist}
               </div>
-              {/* Controls + comments */}
+              {/* Modal: interactive controls + comment list */}
               <Controls img={modal.img} isModal={true} />
               <CommentsBlock imgId={modal.img.id} isModal={true} />
             </div>
