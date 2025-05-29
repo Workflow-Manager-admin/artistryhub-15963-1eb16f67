@@ -41,17 +41,27 @@ function Portfolios() {
     // eslint-disable-next-line
   }, [modal.open]);
 
-  // Fetch 12 random images from picsum.photos (unsplash.it alternative)
+  // Fetch 12 random images from the public picsum.photos API dynamically
   useEffect(() => {
-    const fetchImages = () => {
-      // Static mock for variety, as there’s no backend API (stable for mock/demo)
-      const imgData = Array.from({ length: 12 }).map((_, i) => ({
-        url: `https://picsum.photos/seed/artist${i + 11}/450/300`,
-        alt: `Art Portfolio ${i + 1}`,
-        label: `Artwork #${i + 1}`,
-        artist: `Artist ${String.fromCharCode(65 + (i % 8))}`,
-      }));
-      setImages(imgData);
+    const fetchImages = async () => {
+      setLoading(true);
+      try {
+        // Fetch image list from the public API (can switch to Unsplash or another endpoint if desired)
+        const res = await fetch('https://picsum.photos/v2/list?page=1&limit=12');
+        if (!res.ok) throw new Error('Failed to load images');
+        const data = await res.json();
+        // Map fetched data to suit display (simulate artist names & artwork labels)
+        const imgData = data.map((img, i) => ({
+          url: `https://picsum.photos/id/${img.id}/450/300`,
+          alt: img.author ? `Work by ${img.author}` : `Art Portfolio ${i + 1}`,
+          label: img.author ? `Artwork by ${img.author}` : `Artwork #${i + 1}`,
+          artist: img.author || `Artist ${String.fromCharCode(65 + (i % 8))}`,
+          id: img.id,
+        }));
+        setImages(imgData);
+      } catch (err) {
+        setImages([]);
+      }
       setLoading(false);
     };
     fetchImages();
