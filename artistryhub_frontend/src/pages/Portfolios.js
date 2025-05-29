@@ -5,14 +5,13 @@ import React, { useEffect, useState } from "react";
  * Portfolios Page
  * Displays artist portfolios: Showcases great artworks in a rich portfolio gallery.
  * Fetches and displays a visually appealing grid of real-time images.
- *
- * Enhancements:
- * - Adds hover overlays to portfolio images with details.
- * - Opens a modal lightbox to view image in large format on click.
+ * 
+ * This version fetches images from a public API (Picsum), shows loading/error UI, and is ready for further interactivity.
  */
 function Portfolios() {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [modal, setModal] = useState({ open: false, img: null });
 
   // PUBLIC_INTERFACE
@@ -41,16 +40,18 @@ function Portfolios() {
     // eslint-disable-next-line
   }, [modal.open]);
 
+  // PUBLIC_INTERFACE
   // Fetch 12 random images from the public picsum.photos API dynamically
   useEffect(() => {
     const fetchImages = async () => {
       setLoading(true);
+      setError(null);
       try {
-        // Fetch image list from the public API (can switch to Unsplash or another endpoint if desired)
+        // Fetch image list from the public API (can swap source if desired; here: picsum)
         const res = await fetch('https://picsum.photos/v2/list?page=1&limit=12');
         if (!res.ok) throw new Error('Failed to load images');
         const data = await res.json();
-        // Map fetched data to suit display (simulate artist names & artwork labels)
+        // Map fetched data to suit card display
         const imgData = data.map((img, i) => ({
           url: `https://picsum.photos/id/${img.id}/450/300`,
           alt: img.author ? `Work by ${img.author}` : `Art Portfolio ${i + 1}`,
@@ -61,6 +62,7 @@ function Portfolios() {
         setImages(imgData);
       } catch (err) {
         setImages([]);
+        setError('Sorry, we could not load the gallery. Please try again later.');
       }
       setLoading(false);
     };
@@ -79,6 +81,8 @@ function Portfolios() {
         </h2>
         {loading ? (
           <div className="card">Loading images...</div>
+        ) : error ? (
+          <div className="card" style={{ color: "#b00", fontWeight: 500 }}>{error}</div>
         ) : (
           <div className="portfolio-grid__container">
             {images.map((img, i) => (
@@ -112,6 +116,7 @@ function Portfolios() {
                   }}
                   loading="lazy"
                   draggable={false}
+                  onError={e => { e.target.style.opacity = 0.3; e.target.alt = "Failed to load"; }}
                 />
                 {/* Overlay on hover/focus with image details */}
                 <div className="portfolio-card__overlay">
