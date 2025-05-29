@@ -524,3 +524,144 @@ a:focus-visible {
   border: 2px solid var(--primary-color);
   box-shadow: 0 3px 18px 0 rgba(128,0,0,0.16);
 }
+
+/* --- SIDEBAR Styles for ArtistryHub --- */
+.main-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 100px 24px 36px 24px;
+  box-sizing: border-box;
+  gap: 2.4rem;
+}
+
+.main-content {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 770px;
+}
+
+.sidebar {
+  width: 305px;
+  min-width: 240px;
+  max-width: 350px;
+  background: linear-gradient(149deg, #fffdfa 90%, #fff4d1 100%);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 22px 0 rgba(128,0,0,0.04);
+  margin-left: 12px;
+  padding: 2.25em 1.4em 2em 1.4em;
+  display: flex;
+  flex-direction: column;
+  gap: 1.9em;
+  border: 2px solid var(--accent-color);
+}
+
+.sidebar__section {
+  margin-bottom: 0;
+  padding-bottom: 1.1em;
+  border-bottom: 1.2px solid var(--border-color);
+}
+
+.sidebar__section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.sidebar__title {
+  font-size: 1.08rem;
+  color: var(--primary-color);
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.5em 0;
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+}
+
+.sidebar__placeholder {
+  color: var(--text-subtle);
+  background: #fff7e0;
+  border-radius: 7px;
+  min-height: 38px;
+  padding: 8px 12px;
+  font-size: 0.99rem;
+  font-family: "Inter", sans-serif;
+  letter-spacing: 0.01em;
+  box-shadow: 0 1px 9px #FFD70013;
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  opacity: 0.9;
+}
+
+/* Responsive sidebar: stack below main content on narrow screens */
+@media (max-width: 990px) {
+  .main-container {
+    flex-direction: column;
+    gap: 2.7rem;
+    padding-left: 10px;
+    padding-right: 10px;
+    max-width: 98vw;
+  }
+  .sidebar {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-top: 1.4em;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2em;
+    padding: 1.42em 1em 1.7em 1em;
+  }
+  .sidebar__section {
+    min-width: 175px;
+    flex: 1 1 33%;
+    padding-bottom: 0.7em;
+    border-bottom: none;
+    border-right: 1.2px solid var(--border-color);
+  }
+  .sidebar__section:last-child {
+    border-right: none;
+  }
+}
+
+/* Even more compact for small screens */
+@media (max-width: 650px) {
+  .main-container {
+    padding: 85px 4px 8px 4px;
+    gap: 1.2rem;
+  }
+  .sidebar {
+    padding: 0.8em 0.09em 1em 0.09em;
+    box-shadow: 0 2px 9px 0 #80000014;
+    gap: 1.2em;
+  }
+  .sidebar__section {
+    min-width: 0;
+    flex: 1;
+    border-right: none;
+    padding-bottom: 0.1em;
+  }
+}
+
+/* ArtistryHub brand accent on sidebar */
+.sidebar {
+  border-left: 5px solid var(--primary-color);
+  border-right: 2.5px solid var(--accent-color);
+}
+
+/* Subtle hover effect for placeholders (in future can be buttons or links) */
+.sidebar__placeholder:hover,
+.sidebar__placeholder:focus-visible {
+  background: #fff0c1;
+  color: var(--link-color);
+  box-shadow: 0 2px 6px #FFD70023;
+  outline: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
