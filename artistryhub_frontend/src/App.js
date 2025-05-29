@@ -1,32 +1,13 @@
 import React from 'react';
 import './App.css';
+import NavigationBar from './components/NavigationBar';
 
 // PUBLIC_INTERFACE
 function App() {
   return (
     <div className="app">
       {/* Navigation Bar */}
-      <nav className="navbar">
-        <div className="container navbar__container">
-          <div className="navbar__left">
-            <div className="logo">
-              <span className="logo-symbol">*</span> ArtistryHub
-            </div>
-          </div>
-          <div className="navbar__center">
-            <ul className="navbar__links">
-              <li className="navbar__link"><a href="#portfolios">Portfolios</a></li>
-              <li className="navbar__link"><a href="#marketplace">Marketplace</a></li>
-              <li className="navbar__link"><a href="#stories">Stories</a></li>
-              <li className="navbar__link"><a href="#custom-orders">Custom Orders</a></li>
-              <li className="navbar__link"><a href="#messages">Messages</a></li>
-            </ul>
-          </div>
-          <div className="navbar__right">
-            <button className="btn">Sign In</button>
-          </div>
-        </div>
-      </nav>
+      <NavigationBar />
 
       {/* Main Layout: flex row for content and sidebar */}
       <main className="main-container">
