@@ -1,5 +1,4 @@
 import React from 'react';
-import './NavigationBar.css'; // Optional: If you wish to separate navbar styles further
 
 // PUBLIC_INTERFACE
 /**
