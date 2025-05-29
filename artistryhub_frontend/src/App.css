@@ -221,3 +221,92 @@ a:focus-visible {
   background: var(--accent-color);
   color: var(--primary-color);
 }
+
+/* --- ArtistryHub NavigationBar Extended Styles --- */
+.artistry-navbar {
+  background: var(--navbar-bg);
+  color: var(--navbar-text);
+  box-shadow: var(--navbar-shadow);
+  border-bottom: 2.5px solid var(--accent-color);
+  font-family: 'Inter', 'Roboto', Arial, sans-serif;
+  min-height: 64px;
+}
+
+.artistry-logo {
+  text-decoration: none;
+  color: var(--secondary-color);
+  font-size: 1.46rem;
+  font-weight: 700;
+  font-family: 'Playfair Display', serif;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.03em;
+  filter: drop-shadow(var(--navbar-logo-shadow));
+  transition: filter 0.18s;
+}
+.artistry-logo:hover, .artistry-logo:focus-visible {
+  filter: drop-shadow(0 2px 16px #FFD70088);
+  color: var(--accent-color);
+}
+
+.artistry-logo-symbol {
+  color: var(--accent-color);
+  font-size: 2rem;
+  margin-right: 2px;
+  filter: drop-shadow(0 0 6px #fff2b3bb);
+  transition: filter 0.19s;
+}
+
+/* Navbar links */
+.artistry-navbar__links {
+  display: flex;
+  gap: var(--navbar-link-gap);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Individual link (li > a) */
+.navbar__link a,
+.artistry-navbar__links a {
+  color: var(--navbar-text);
+  font-weight: var(--navbar-link-weight);
+  padding: var(--navbar-link-padding);
+  border-radius: var(--navbar-link-radius);
+  font-size: 1.08rem;
+  letter-spacing: 0.02em;
+  background: none;
+  text-decoration: none;
+  transition: var(--transition);
+  position: relative;
+  z-index: 1;
+}
+.navbar__link a:hover,
+.navbar__link a:focus-visible,
+.artistry-navbar__links a:hover,
+.artistry-navbar__links a:focus-visible {
+  color: var(--accent-color);
+  background: var(--navbar-link-hover-bg);
+  text-decoration: none;
+  outline: none;
+  box-shadow: 0 2px 12px #FFD70019;
+}
+
+.btn--gold {
+  background: linear-gradient(92deg, var(--accent-color) 60%, var(--primary-color) 120%);
+  color: var(--primary-color);
+  border: 2px solid var(--accent-color);
+  box-shadow: 0 2px 14px 0 rgba(255,215,0,0.16);
+  font-weight: 700;
+  text-shadow: 0 1px 4px #fff9e1bb;
+  letter-spacing: 0.04em;
+  transition: var(--transition);
+}
+
+.btn--gold:hover, .btn--gold:focus-visible {
+  background: var(--primary-color);
+  color: var(--accent-color);
+  border: 2px solid var(--primary-color);
+  box-shadow: 0 3px 18px 0 rgba(128,0,0,0.16);
+}
