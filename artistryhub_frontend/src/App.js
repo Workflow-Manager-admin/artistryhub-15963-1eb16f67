@@ -15,14 +15,7 @@ function App() {
       <main className="main-container">
         <div className="main-content">
           {/* HERO SECTION */}
-          <section className="hero">
-            <div className="subtitle">Celebrating Creativity</div>
-            <h1 className="title">Welcome to ArtistryHub</h1>
-            <div className="description">
-              Connect with artists &amp; crafters. Discover unique creations. Order custom masterpieces. Tell your story!
-            </div>
-            <button className="btn btn-large">Explore Marketplace</button>
-          </section>
+          <HeroSection />
 
           {/* GRID: portfolios/marketplace */}
           <section className="grid portfolio-grid" id="portfolios">

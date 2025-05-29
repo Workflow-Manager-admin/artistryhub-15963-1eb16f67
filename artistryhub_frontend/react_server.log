@@ -33,3 +33,6 @@ src/App.js
   Line 5:8:  'HeroSection' is defined but never used  no-unused-vars
 
 webpack compiled with 1 warning
+Compiling...
+Compiled successfully!
+webpack compiled successfully
