@@ -3,6 +3,7 @@ import React from 'react';
 import './App.css';
 import NavigationBar from './components/NavigationBar';
 import HeroSection from './components/HeroSection';
+import PortfolioGrid from './components/PortfolioGrid';
 
 // PUBLIC_INTERFACE
 function App() {
@@ -17,20 +18,8 @@ function App() {
           {/* HERO SECTION */}
           <HeroSection />
 
-          {/* GRID: portfolios/marketplace */}
-          <section className="grid portfolio-grid" id="portfolios">
-            {/* Placeholder for artist portfolios / trending marketplace items */}
-            <div className="grid__placeholder">
-              <h2 className="grid__title">Portfolio &amp; Marketplace</h2>
-              <div className="grid__description">
-                {/* Later to be replaced with dynamic grid of cards */}
-                <div className="card card--placeholder">[ Portfolio Card Placeholder ]</div>
-                <div className="card card--placeholder">[ Marketplace Card Placeholder ]</div>
-                <div className="card card--placeholder">[ Portfolio Card Placeholder ]</div>
-                <div className="card card--placeholder">[ Marketplace Card Placeholder ]</div>
-              </div>
-            </div>
-          </section>
+          {/* Portfolios & Marketplace Grid */}
+          <PortfolioGrid />
         </div>
         {/* SIDEBAR: Stories & Custom Orders */}
         <aside className="sidebar">
