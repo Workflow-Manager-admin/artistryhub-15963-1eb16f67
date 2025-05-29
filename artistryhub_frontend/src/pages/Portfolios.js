@@ -5,10 +5,41 @@ import React, { useEffect, useState } from "react";
  * Portfolios Page
  * Displays artist portfolios: Showcases great artworks in a rich portfolio gallery.
  * Fetches and displays a visually appealing grid of real-time images.
+ *
+ * Enhancements:
+ * - Adds hover overlays to portfolio images with details.
+ * - Opens a modal lightbox to view image in large format on click.
  */
 function Portfolios() {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [modal, setModal] = useState({ open: false, img: null });
+
+  // PUBLIC_INTERFACE
+  /** Open the image modal/lightbox */
+  const handleOpenModal = (img) => {
+    setModal({ open: true, img });
+    document.body.style.overflow = "hidden"; // Prevent background scroll
+  };
+
+  // PUBLIC_INTERFACE
+  /** Close the modal */
+  const handleCloseModal = () => {
+    setModal({ open: false, img: null });
+    document.body.style.overflow = ""; // Restore scroll
+  };
+
+  // PUBLIC_INTERFACE
+  /** Allow closing modal with ESC key */
+  useEffect(() => {
+    if (!modal.open) return;
+    function onEsc(e) {
+      if (e.key === "Escape") handleCloseModal();
+    }
+    window.addEventListener("keydown", onEsc);
+    return () => window.removeEventListener("keydown", onEsc);
+    // eslint-disable-next-line
+  }, [modal.open]);
 
   // Fetch 12 random images from picsum.photos (unsplash.it alternative)
   useEffect(() => {
@@ -43,12 +74,18 @@ function Portfolios() {
             {images.map((img, i) => (
               <div
                 key={img.url}
-                className="portfolio-card portfolio-card--portfolio card"
+                className="portfolio-card portfolio-card--portfolio card portfolio-card--interactive"
                 tabIndex={0}
                 aria-label={img.label + " by " + img.artist}
                 style={{
-                  transition: "transform 0.15s, box-shadow 0.16s",
-                  outline: "none"
+                  transition: "transform 0.18s, box-shadow 0.18s",
+                  outline: "none",
+                  cursor: "pointer",
+                  position: "relative"
+                }}
+                onClick={() => handleOpenModal(img)}
+                onKeyPress={e => {
+                  if (e.key === "Enter" || e.key === " ") handleOpenModal(img);
                 }}
               >
                 <img
@@ -64,7 +101,28 @@ function Portfolios() {
                     boxShadow: "0 2px 10px #80000017",
                   }}
                   loading="lazy"
+                  draggable={false}
                 />
+                {/* Overlay on hover/focus with image details */}
+                <div className="portfolio-card__overlay">
+                  <div>
+                    <div className="portfolio-card__overlay-label">{img.label}</div>
+                    <div className="portfolio-card__overlay-artist">
+                      by <b>{img.artist}</b>
+                    </div>
+                    <button
+                      className="portfolio-card__overlay-btn"
+                      tabIndex={-1}
+                      aria-label="View fullscreen"
+                      onClick={e => {
+                        e.stopPropagation();
+                        handleOpenModal(img);
+                      }}
+                    >
+                      View
+                    </button>
+                  </div>
+                </div>
                 <div className="portfolio-card__label">
                   <span style={{ color: "#800000", fontWeight: 600 }}>{img.label}</span>
                   <span style={{
@@ -81,6 +139,45 @@ function Portfolios() {
           </div>
         )}
       </div>
+      {/* Modal Lightbox */}
+      {modal.open && (
+        <div className="image-modal-backdrop" onClick={handleCloseModal}>
+          <div
+            className="image-modal"
+            onClick={e => e.stopPropagation()}
+            tabIndex={0}
+            role="dialog"
+            aria-modal="true"
+          >
+            <button
+              className="image-modal__close"
+              onClick={handleCloseModal}
+              aria-label="Close image modal"
+              tabIndex={1}
+            >
+              &times;
+            </button>
+            <img
+              src={modal.img.url}
+              alt={modal.img.alt}
+              className="image-modal__img"
+              style={{
+                maxWidth: "86vw",
+                maxHeight: "68vh",
+                borderRadius: "13px",
+                background: "#faf7f5"
+              }}
+              draggable={false}
+            />
+            <div className="image-modal__caption">
+              <div style={{ fontWeight: 700 }}>{modal.img.label}</div>
+              <div style={{ color: "#86656b" }}>
+                by {modal.img.artist}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
