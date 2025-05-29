@@ -1,108 +1,217 @@
 :root {
-  --kavia-orange: #E87A41;
-  --kavia-dark: #1A1A1A;
-  --text-color: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --border-color: rgba(255, 255, 255, 0.1);
+  /* ArtistryHub color palette */
+  --primary-color: #800000;     /* Elegant Maroon */
+  --secondary-color: #FFFFFF;   /* Crisp White */
+  --accent-color: #FFD700;      /* Gold Accent */
+
+  --background-color: var(--secondary-color);
+  --surface-color: #faf7f5;
+  --text-color: #262024;
+  --text-heading: var(--primary-color);
+  --text-subtle: #86656b;
+  --border-color: #e1d2c8;
+  --link-color: var(--primary-color);
+  --link-hover: var(--accent-color);
+
+  --navbar-bg: var(--primary-color);
+  --navbar-text: var(--secondary-color);
+  --navbar-shadow: 0 2px 12px 0 rgba(128,0,0,0.04);
+
+  --card-shadow: 0 2px 16px 0 rgba(128,0,0,0.06);
+  --radius: 9px;
+
+  --transition: all 0.22s cubic-bezier(.4,0,.2,1);
 }
 
+/* GLOBAL LIGHT THEME */
 body {
   margin: 0;
+  min-height: 100vh;
   font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif;
-  background-color: var(--kavia-dark);
+  background: linear-gradient(160deg, var(--background-color) 65%, #fff9e8 100%);
   color: var(--text-color);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  letter-spacing: 0.01em;
 }
 
+/* Typography */
+h1, .title {
+  font-family: "Playfair Display", serif;
+  color: var(--primary-color);
+  font-size: 3.2rem;
+  margin: 0 0 8px 0;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.18;
+}
+h2, h3, h4, h5, h6,
+.subtitle {
+  font-family: "Inter", sans-serif;
+  color: var(--accent-color);
+  font-weight: 600;
+  margin-bottom: 0.2em;
+}
+
+.subtitle {
+  font-size: 1.15rem;
+  letter-spacing: 0.07em;
+  color: var(--accent-color);
+}
+
+p, .description {
+  color: var(--text-subtle);
+  font-size: 1.14rem;
+  line-height: 1.65;
+  margin-top: 0;
+  margin-bottom: 1em;
+  font-family: "Inter", "Roboto", Arial, sans-serif;
+  font-weight: 400;
+}
+
+/* Links */
+a {
+  color: var(--link-color);
+  text-decoration: underline;
+  transition: var(--transition);
+}
+a:hover,
+a:focus-visible {
+  color: var(--link-hover);
+  text-decoration-thickness: 2px;
+  background-color: #fffde2;
+  border-radius: 5px;
+  outline: none;
+}
+
+/* App container and layout */
 .app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: none;
 }
 
 .navbar {
-  background-color: var(--kavia-dark);
-  padding: 16px;
+  background-color: var(--navbar-bg);
+  color: var(--navbar-text);
+  padding: 18px 0;
+  box-shadow: var(--navbar-shadow);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 2px solid var(--accent-color);
   position: fixed;
   top: 0;
   width: 100%;
-  box-sizing: border-box;
   z-index: 100;
+  box-sizing: border-box;
+  letter-spacing: 0.03em;
 }
 
 .logo {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.36rem;
+  font-weight: 700;
+  font-family: 'Playfair Display', serif;
+  color: var(--secondary-color);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 9px;
 }
 
 .logo-symbol {
-  color: var(--kavia-orange);
+  color: var(--accent-color);
+  font-size: 2rem;
+  filter: drop-shadow(0 0 5px #fff2b3);
 }
 
 .container {
-  max-width: 900px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 32px;
   width: 100%;
   box-sizing: border-box;
 }
 
+/* HERO Section: showcase artworks, creative feel */
 .hero {
-  padding-top: 120px;
-  padding-bottom: 64px;
-  text-align: center;
+  padding-top: 130px;
+  padding-bottom: 52px;
+  background: rgba(255, 255, 255, 0.78);
+  border-radius: var(--radius);
+  margin: 2.5rem 0;
+  box-shadow: var(--card-shadow);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 27px;
+  position: relative;
 }
 
-.subtitle {
-  color: var(--kavia-orange);
-  font-weight: 500;
-  font-size: 1.1rem;
-}
-
-.title {
-  font-size: 3.5rem;
-  font-weight: 600;
-  line-height: 1.2;
-  margin: 0;
-}
-
-.description {
-  font-size: 1.1rem;
-  line-height: 1.5;
-  color: var(--text-secondary);
-  max-width: 600px;
-  margin-bottom: 16px;
-}
-
+/* Buttons: creative accents */
 .btn {
-  background-color: var(--kavia-orange);
-  color: white;
+  background-image: linear-gradient(90deg, var(--primary-color), var(--accent-color) 110%);
+  color: var(--secondary-color);
   border: none;
-  border-radius: 4px;
-  padding: 10px 20px;
-  font-size: 1rem;
-  font-weight: 500;
+  border-radius: 6px;
+  padding: 10px 24px;
+  font-size: 1.06rem;
+  font-family: "Inter", Arial, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: var(--transition);
+  box-shadow: 0 2px 12px 0 rgba(128,0,0,0.06);
+  outline: none;
+  margin: 0.1em 0;
+  display: inline-block;
+  text-shadow: 0 1px 4px #8000000b;
 }
 
-.btn:hover {
-  background-color: #FF8B4D;
+.btn:hover,
+.btn:focus-visible {
+  background-image: linear-gradient(90deg, var(--accent-color) 10%, var(--primary-color));
+  color: var(--primary-color);
+  border: 1px solid var(--accent-color);
+  box-shadow: 0 2px 20px 0 rgba(255,215,0,0.13);
 }
 
 .btn-large {
-  padding: 12px 24px;
-  font-size: 1.1rem;
+  padding: 14px 36px;
+  font-size: 1.19rem;
+  border-radius: 9px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f7f5ef;
+}
+
+/* Card, surfaces, grid support for portfolios/marketplace (for later use) */
+.card {
+  background: var(--surface-color);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius);
+  box-shadow: var(--card-shadow);
+  transition: var(--transition);
+  padding: 1.25em;
+  margin-bottom: 1.2em;
+}
+
+/* Utilities for elegant site-wide appearance */
+.shadowed {
+  box-shadow: var(--card-shadow);
+}
+
+.rounded {
+  border-radius: var(--radius);
+}
+
+/* Selection styling */
+::selection {
+  background: var(--accent-color);
+  color: var(--primary-color);
 }
