@@ -1,6 +1,8 @@
+// PUBLIC_INTERFACE
 import React from 'react';
 import './App.css';
 import NavigationBar from './components/NavigationBar';
+import HeroSection from './components/HeroSection';
 
 // PUBLIC_INTERFACE
 function App() {
