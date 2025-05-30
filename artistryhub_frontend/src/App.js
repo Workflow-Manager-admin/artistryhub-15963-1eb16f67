@@ -740,20 +740,278 @@ function CustomOrdersSidebar() {
   );
 }
 
-// PUBLIC_INTERFACE
+/*
+ * PUBLIC_INTERFACE
+ * Redesigned Messaging system: modern, elegant chat interface using ArtistryHub's maroon, gold, and white theme.
+ * Sent and received bubbles, avatars, timestamps, polished input area, and distinct separation for a premium, branded look.
+ */
 function Messaging() {
-  /** Messaging system sample thread */
+  // Mocked messages for the UI
+  const messages = [
+    {
+      id: 1,
+      sender: "Buyer",
+      avatar: "https://randomuser.me/api/portraits/women/52.jpg",
+      time: "09:58 AM",
+      content: "Hello! Are gold trims available for custom cups?",
+      sent: false,
+    },
+    {
+      id: 2,
+      sender: "Artist",
+      avatar: "https://randomuser.me/api/portraits/men/17.jpg",
+      time: "10:01 AM",
+      content: "Yes! I can add gold accents—would you like a name or design?",
+      sent: true,
+    },
+    {
+      id: 3,
+      sender: "Buyer",
+      avatar: "https://randomuser.me/api/portraits/women/52.jpg",
+      time: "10:02 AM",
+      content: "That sounds perfect! Could you add the initials ‘A.C.’ in gold?",
+      sent: false,
+    },
+    {
+      id: 4,
+      sender: "Artist",
+      avatar: "https://randomuser.me/api/portraits/men/17.jpg",
+      time: "10:03 AM",
+      content: "Absolutely! I’ll sketch out a preview and send it for approval shortly.",
+      sent: true,
+    },
+  ];
+
+  const [input, setInput] = React.useState("");
+
+  // Handler for sending new messages (UI only)
+  function handleSendMessage(e) {
+    e.preventDefault();
+    // In demo: do not actually append message; reset input instead
+    setInput("");
+  }
+
   return (
-    <section className="ah-content-section">
-      <h2 className="ah-section-title">Messages</h2>
-      <div className="ah-messaging-placeholder">
-        <div className="ah-message-thread">
-          <div className="ah-msg-sender">Buyer</div>
-          <div className="ah-msg-content">Hello! Are gold trims available for custom cups?</div>
-          <div className="ah-msg-sender">Artist</div>
-          <div className="ah-msg-content">Yes! I can add gold accents—would you like a name or design?</div>
+    <section
+      className="ah-content-section"
+      style={{
+        maxWidth: 570,
+        margin: "0 auto",
+        boxShadow: "0 6px 32px 0 #80000007, 0 1.2px 8px #FFD70019",
+        borderRadius: 18,
+        padding: 0,
+        overflow: "hidden",
+        background: "var(--ah-light)",
+        border: "2.1px solid var(--ah-border)",
+        minHeight: 510,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <header
+        style={{
+          background:
+            "linear-gradient(89deg, var(--ah-primary) 82%, #FFD700 140%)",
+          color: "var(--ah-secondary)",
+          padding: "22px 30px 12px 30px",
+          borderBottom: "2px solid var(--ah-accent)",
+          fontFamily: "'Georgia', serif",
+        }}
+      >
+        <div
+          style={{
+            fontWeight: 800,
+            fontSize: "1.55em",
+            letterSpacing: 1.4,
+            display: "flex",
+            alignItems: "center",
+            gap: 13,
+          }}
+        >
+          <span style={{ fontSize: "1.25em" }}>💬</span>
+          Messages
         </div>
+      </header>
+      <div
+        className="ah-messages-main"
+        style={{
+          background:
+            "linear-gradient(99deg, #fffdfa 74%, var(--ah-accent) 180%)",
+          flex: "1 1 auto",
+          display: "flex",
+          flexDirection: "column",
+          padding: "28px 20px 14px 20px",
+          gap: 10,
+          overflowY: "auto",
+          minHeight: 320,
+        }}
+      >
+        {messages.map((msg, idx) => (
+          <div
+            key={msg.id}
+            style={{
+              display: "flex",
+              flexDirection: msg.sent ? "row-reverse" : "row",
+              alignItems: "flex-end",
+              gap: 14,
+              marginBottom: 5,
+            }}
+          >
+            {/* Profile avatar */}
+            <img
+              src={msg.avatar}
+              alt={`${msg.sender} avatar`}
+              style={{
+                width: 42,
+                height: 42,
+                borderRadius: "50%",
+                border: `2.5px solid ${
+                  msg.sent ? "var(--ah-accent)" : "var(--ah-primary)"
+                }`,
+                background:
+                  msg.sent
+                    ? "linear-gradient(140deg, #ffe586 58%, var(--ah-accent) 130%)"
+                    : "linear-gradient(130deg, #b68c82 40%, var(--ah-primary) 130%)",
+                objectFit: "cover",
+                boxShadow: msg.sent
+                  ? "0 2px 9px 0 #ffd90099"
+                  : "0 2px 9px 0 #80000033",
+              }}
+            />
+            {/* Bubble area */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: msg.sent ? "flex-end" : "flex-start",
+                maxWidth: "77%",
+                minWidth: 65,
+              }}
+            >
+              <div
+                style={{
+                  fontWeight: 600,
+                  fontSize: "0.96em",
+                  color: msg.sent
+                    ? "var(--ah-primary)"
+                    : "var(--ah-accent)",
+                  marginBottom: 2,
+                  letterSpacing: 0.1,
+                  textAlign: msg.sent ? "right" : "left",
+                  opacity: 0.92,
+                }}
+              >
+                {msg.sender}
+              </div>
+              <div
+                style={{
+                  background: msg.sent
+                    ? "linear-gradient(101deg, var(--ah-accent) 48%, #fffbe7 120%)"
+                    : "linear-gradient(95deg, #fffdfa 78%, var(--ah-primary) 160%)",
+                  color: msg.sent
+                    ? "var(--ah-primary)"
+                    : "var(--ah-dark)",
+                  borderRadius: msg.sent
+                    ? "26px 11px 24px 26px"
+                    : "13px 24px 26px 24px",
+                  boxShadow: msg.sent
+                    ? "0 2px 13px 0 #ffd90080"
+                    : "0 4px 16px 0 #80000018",
+                  fontSize: "1.09em",
+                  padding: "9px 19px 11px 18px",
+                  marginBottom: 2,
+                  fontFamily: "'Segoe UI', 'Georgia', serif",
+                  fontWeight: 500,
+                  transition: "background 0.2s",
+                  border: msg.sent
+                    ? "2.4px solid var(--ah-accent)"
+                    : "2.2px solid #e0b899",
+                  lineHeight: 1.48,
+                  wordBreak: "break-word",
+                  minWidth: 36,
+                  minHeight: 42,
+                }}
+              >
+                {msg.content}
+              </div>
+              <div
+                style={{
+                  fontSize: "0.86em",
+                  color: msg.sent
+                    ? "var(--ah-border)"
+                    : "#bf9986",
+                  fontWeight: 400,
+                  marginTop: 1,
+                  textShadow: "none",
+                  letterSpacing: 0.07,
+                  textAlign: msg.sent ? "right" : "left",
+                  opacity: 0.93,
+                }}
+              >
+                {msg.time}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
+      <form
+        onSubmit={handleSendMessage}
+        style={{
+          background:
+            "linear-gradient(87deg, var(--ah-secondary) 80%, #fff8e3 120%)",
+          borderTop: "1.5px solid var(--ah-accent)",
+          padding: "18px 20px 14px 20px",
+          display: "flex",
+          alignItems: "center",
+          gap: 17,
+          minHeight: 80,
+        }}
+        autoComplete="off"
+        spellCheck="true"
+      >
+        <input
+          type="text"
+          placeholder="Type your message…"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          style={{
+            flex: 1,
+            borderRadius: 22,
+            border: "2.1px solid var(--ah-primary)",
+            padding: "13px 20px",
+            fontSize: "1.1em",
+            outline: "none",
+            fontWeight: 500,
+            color: "var(--ah-primary)",
+            background: "linear-gradient(104deg, #fffdfa 70%, #FFF8D7 120%)",
+            boxShadow: "0 1px 8px 0 #ffd90025",
+            marginRight: 6,
+            fontFamily: "'Segoe UI', 'Inter', 'Georgia', serif",
+          }}
+        />
+        <button
+          type="submit"
+          className="ah-btn"
+          style={{
+            fontWeight: 700,
+            background:
+              "linear-gradient(97deg, var(--ah-primary) 65%, var(--ah-accent) 180%)",
+            color: "var(--ah-accent)",
+            border: "none",
+            borderRadius: 19,
+            fontSize: "1.13em",
+            padding: "11px 27px",
+            boxShadow: "0 2px 10px 0 #80000010",
+            letterSpacing: "0.5px",
+            cursor: input.trim() ? "pointer" : "not-allowed",
+            opacity: input.trim() ? 1 : 0.4,
+            transition: "background 0.19s, opacity 0.15s",
+          }}
+          disabled={!input.trim()}
+        >
+          Send
+        </button>
+      </form>
     </section>
   );
 }

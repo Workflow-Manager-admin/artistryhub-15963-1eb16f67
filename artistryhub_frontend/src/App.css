@@ -456,30 +456,78 @@ html {
   font-style: italic;
 }
 
-/* Messaging */
-.ah-messaging-placeholder {
-  padding: 16px 8px 0 8px;
-  color: var(--ah-primary);
+/* -- Elegant Modern ArtistryHub Messaging/Chat Styles -- */
+
+/* Main chat container & header get theme background inlined */
+/* .ah-messages-main, header -- styled inline for messaging. */
+
+/* Responsive message list scrollbars (non-intrusive) */
+.ah-messages-main::-webkit-scrollbar {
+  width: 8px;
+  background: #fff7e1;
 }
-.ah-message-thread {
-  background: linear-gradient(90deg, #fffbe9 80%, var(--ah-accent) 160%);
-  border-radius: 7px;
-  box-shadow: 0 1px 6px 0 rgba(128,0,0,0.06);
-  padding: 15px;
-  border: 1.3px solid var(--ah-border);
-  min-height: 60px;
+.ah-messages-main::-webkit-scrollbar-thumb {
+  background: #ffd90066;
+  border-radius: 4px;
+}
+.ah-messages-main::-webkit-scrollbar-thumb:hover {
+  background: #ffd900a1;
+}
+
+/* Bubble shadow on focus or hover (accessibility) */
+.ah-message-bubble:focus, .ah-message-bubble:hover {
+  box-shadow: 0 0 0 3px #ffe69b70, 0 2.5px 16px #ffd90040;
+  outline: none;
+}
+
+/* Input overrides for better experience on mobile/desktop */
+.ah-messages-input-area {
+  background: linear-gradient(89deg, #fffdfa 80%, #ffe788 160%);
+  border-top: 1.5px solid var(--ah-accent);
+  min-height: 80px;
   display: flex;
-  flex-direction: column;
-  gap: 5px;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 17px 13px 17px;
 }
-.ah-msg-sender {
+.ah-messages-input {
+  flex: 1;
+  border-radius: 22px;
+  border: 2.1px solid var(--ah-primary);
+  padding: 13px 20px;
+  font-size: 1.08em;
+  outline: none;
+  font-weight: 500;
+  color: var(--ah-primary);
+  background: linear-gradient(104deg, #fffdfa 70%, #FFF8D7 120%);
+  box-shadow: 0 1px 8px 0 #ffd90023;
+  margin-right: 6px;
+  font-family: 'Segoe UI', 'Inter', 'Georgia', serif;
+}
+.ah-messages-send-btn {
   font-weight: 700;
-  color: var(--ah-text-header);
-  font-size: 0.97rem;
+  background: linear-gradient(97deg, var(--ah-primary) 65%, var(--ah-accent) 180%);
+  color: var(--ah-accent);
+  border: none;
+  border-radius: 18px;
+  font-size: 1.14em;
+  padding: 10px 25px;
+  box-shadow: 0 2px 9px 0 #80000014;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  transition: background 0.18s, opacity 0.13s;
 }
-.ah-msg-content {
-  margin-left: 10px;
-  font-size: 0.99rem;
+
+.ah-messages-send-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.47;
+}
+
+/* Responsive tweaks for the messaging area */
+@media(max-width: 740px) {
+  .ah-messages-main {
+    padding: 7vw 1vw 16vw 1vw !important;
+  }
 }
 
 /* Profile */
