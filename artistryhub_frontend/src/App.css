@@ -11,7 +11,6 @@
   --border-light: #F3EDED;
 }
 
-/* GLOBAL: Base Body and Typography */
 body {
   margin: 0;
   font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif;
@@ -32,48 +31,76 @@ body {
 /* HEADER/NAVBAR */
 .navbar {
   background-color: var(--secondary-white);
-  padding: 16px 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  padding: 14px 0 14px 0;
   border-bottom: 1.5px solid var(--border-light);
   position: fixed;
   top: 0;
   width: 100%;
   box-sizing: border-box;
   z-index: 100;
-  transition: box-shadow 0.15s;
-  box-shadow: 0 2px 16px 0 rgba(128,0,0,0.02);
+  box-shadow: 0 2px 16px 0 rgba(128,0,0,0.025);
 }
 
-/* LOGO */
+.navbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .logo {
-  font-size: 1.35rem;
+  font-size: 1.48rem;
   font-weight: 700;
   display: flex;
   align-items: center;
   gap: 10px;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
   color: var(--primary-maroon);
 }
 
 .logo-symbol {
   color: var(--accent-gold);
-  font-size: 1.4em;
+  font-size: 1.6em;
+}
+
+/* NAV LINKS */
+.navbar-links {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-links li {
+  font-weight: 500;
+}
+
+.navbar-links a {
+  color: var(--primary-maroon);
+  text-decoration: none;
+  font-size: 1.09rem;
+  padding: 6px 2px;
+  border-radius: 2.5px;
+  transition: background 0.17s, color 0.17s;
+}
+
+.navbar-links a:hover {
+  color: var(--secondary-white);
+  background: var(--primary-maroon);
 }
 
 /* LAYOUT CONTAINER */
 .container {
-  max-width: 960px;
+  max-width: 1120px;
   margin: 0 auto;
-  padding: 0 28px;
+  padding: 0 24px;
   width: 100%;
   box-sizing: border-box;
 }
 
 /* HERO SECTION */
 .hero {
-  padding-top: 110px;
+  padding-top: 112px;
   padding-bottom: 60px;
   text-align: center;
   display: flex;
@@ -91,20 +118,20 @@ body {
 }
 
 .title {
-  font-size: 3.6rem;
+  font-size: 3.1rem;
   font-weight: 700;
-  line-height: 1.19;
+  line-height: 1.13;
   margin: 0;
   color: var(--primary-maroon);
   letter-spacing: 0.5px;
 }
 
 .description {
-  font-size: 1.13rem;
-  line-height: 1.5;
+  font-size: 1.05rem;
+  line-height: 1.48;
   color: var(--text-secondary);
   max-width: 600px;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 /* BUTTONS */
@@ -134,9 +161,211 @@ body {
   border-radius: 5px;
 }
 
+/* MAIN GRID LAYOUT */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 310px;
+  gap: 44px 32px;
+  margin-bottom: 40px;
+  min-height: 540px;
+}
+
+@media (max-width: 980px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+    gap: 40px 0;
+  }
+  .sidebar {
+    max-width: 520px;
+    margin: 0 auto;
+  }
+}
+
+/* MAIN SECTION: PORTFOLIOS & TRENDING CRAFTS */
+.main-portfolios {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.section-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--primary-maroon);
+  margin: 17px 0 13px 0;
+  letter-spacing: 0.2px;
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 22px;
+}
+
+.portfolio-card {
+  background: #fff;
+  border: 1.5px solid var(--border-light);
+  border-radius: 9px;
+  padding: 15px 12px 13px 12px;
+  box-shadow: 0 1px 6px rgba(128,0,0,0.03);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.portfolio-thumb {
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  background: var(--border-light);
+  margin-bottom: 13px;
+  border: 2px solid var(--accent-gold);
+}
+.placeholder-thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--border-light) 75%, var(--accent-gold) 90%);
+}
+
+.portfolio-info {
+  text-align: center;
+}
+
+.portfolio-name {
+  font-weight: 600;
+  color: var(--primary-maroon);
+  font-size: 1.11rem;
+}
+
+.portfolio-desc {
+  font-size: 0.96rem;
+  color: var(--text-secondary);
+  margin-top: 5px;
+}
+
+/* TRENDING CRAFTS GRID */
+.crafts-grid {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px,1fr));
+  gap: 17px;
+}
+
+.craft-card {
+  background: #fff;
+  border: 1.2px solid var(--border-light);
+  border-radius: 7px;
+  padding: 10px 9px 10px 9px;
+  box-shadow: 0 1px 6px rgba(128,0,0,0.025);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.craft-thumb {
+  min-width: 48px;
+  height: 48px;
+  border-radius: 7px;
+  background: var(--border-light);
+  border: 1.2px solid var(--accent-gold);
+}
+
+.craft-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.craft-title {
+  font-weight: 550;
+  color: var(--primary-maroon);
+  font-size: 1.01rem;
+}
+.craft-meta {
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+}
+
+/* SIDEBAR */
+.sidebar {
+  background: #fffefc;
+  padding: 20px 18px;
+  border: 1.8px solid var(--border-light);
+  border-radius: 10px;
+  box-shadow: 0 2px 20px 0 rgba(221, 196, 106, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 340px;
+  min-width: 220px;
+}
+
+.sidebar-group {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+}
+.sidebar-title {
+  font-size: 1.18rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--accent-gold);
+  letter-spacing: 0.5px;
+}
+
+.story-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1.2px solid var(--border-light);
+  border-radius: 7px;
+  padding: 7px 10px 7px 7px;
+  gap: 11px;
+}
+
+.story-thumb {
+  min-width: 38px;
+  height: 38px;
+  border-radius: 7px;
+  background: var(--border-light);
+  border: 1.2px solid var(--accent-gold);
+}
+
+.story-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.story-headline {
+  font-size: 1.03rem;
+  font-weight: 550;
+  color: var(--primary-maroon);
+}
+
+.story-preview {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+
+.customorder-widget {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: #fcf6e7;
+  padding: 15px 13px 13px 13px;
+  border-radius: 7px;
+  font-size: 1.06rem;
+  color: var(--primary-maroon);
+  border: 1.2px solid var(--accent-gold);
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.06);
+  margin-top: 1px;
+  width: 100%;
+}
+
 /* Remove Legacy/KAVIA color classes (no longer used) */
 
-/* GENERAL: For modern/elegant light theme, keep spacing and layout clean */
 ::-webkit-scrollbar-thumb {
   background: var(--border-light);
   border-radius: 8px;
