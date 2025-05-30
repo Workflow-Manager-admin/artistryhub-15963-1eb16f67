@@ -584,6 +584,13 @@ function Home() {
 
   const [currentMsg, setCurrentMsg] = useState(0);
 
+  // Artistic hero background image (maroon/gold/white palette, Unsplash, copyright-safe)
+  // Example: https://unsplash.com/photos/an-artistic-top-down-photo-of-paintbrushes-and-acrylic-paint-on-a-canvas-PUZ9tffheQw
+  // Use width=650 because design will scale on large screens; fallback to 500px for better clarity on lower-end machines.
+  const heroImageUrl =
+    "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80";
+  // Maroon/canvas/gold paint, copyright-safe (Unsplash), fits color scheme.
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentMsg((prev) => (prev + 1) % messages.length);
@@ -591,44 +598,109 @@ function Home() {
     return () => clearInterval(interval);
   }, [messages.length]);
 
+  // Responsive, double column hero section: image on right for large, stacked for mobile.
   return (
-    <section className="ah-hero" style={{ maxWidth: 700, margin: "64px auto 68px auto" }}>
-      {/* Animated Welcoming Message */}
-      <div className="ah-hero-heading animated-welcome-text" style={{ fontSize: "3.1rem", textAlign: "center" }}>
-        <span
-          key={currentMsg}
-          className="welcome-fade-in"
+    <section
+      className="ah-hero ah-hero-with-art-image"
+      style={{
+        maxWidth: 1100,
+        margin: "64px auto 68px auto",
+        minHeight: 345,
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 36,
+        background: "linear-gradient(100deg, var(--ah-primary) 37%, #ac5151 110%)"
+      }}
+    >
+      <div
+        className="ah-hero-textblock"
+        style={{
+          flex: 2.2,
+          zIndex: 2,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          minWidth: 0,
+        }}
+      >
+        {/* Animated Welcoming Message */}
+        <div
+          className="ah-hero-heading animated-welcome-text"
+          style={{
+            fontSize: "3.1rem",
+            textAlign: "center",
+            lineHeight: 1.15,
+          }}
         >
-          {messages[currentMsg]}
-        </span>
+          <span
+            key={currentMsg}
+            className="welcome-fade-in"
+          >
+            {messages[currentMsg]}
+          </span>
+        </div>
+        <div className="ah-hero-flashy-underline"></div>
+        {/* Brand summary below the animated intro */}
+        <div
+          className="ah-hero-desc"
+          style={{
+            textAlign: "center",
+            marginTop: 30,
+            color: "#ffe3ae",
+            fontSize: "1.18rem",
+            fontWeight: 400,
+            lineHeight: 1.7,
+            background: "none"
+          }}
+        >
+          <span style={{ color: "var(--ah-accent)", fontWeight: 700 }}>
+            ArtistryHub
+          </span>{" "}
+          connects passionate artists, crafters, and admirers in a vibrant, supportive community.<br />
+          <br />
+          <span style={{ color: "var(--ah-accent)", fontWeight: 600 }}>
+            Our mission
+          </span>: To empower creative individuals to showcase their artistry, share stories behind every piece, and spark meaningful connections.<br />
+          <br />
+          <span style={{ color: "var(--ah-secondary)", fontWeight: 500 }}>
+            Who is it for?
+          </span> Artists, crafters, and anyone seeking unique, handcrafted inspiration or commissions.<br />
+          <br />
+          <span style={{ color: "var(--ah-accent)", fontWeight: 600 }}>
+            What does it offer?
+          </span> Elegant portfolios, direct connections with makers, art stories, and a welcoming space to discover, connect, and celebrate creativity.
+        </div>
       </div>
-      <div className="ah-hero-flashy-underline"></div>
-      {/* Brand summary below the animated intro */}
-      <div className="ah-hero-desc" style={{
-        textAlign: "center",
-        marginTop: 30,
-        color: "#ffe3ae",
-        fontSize: "1.18rem",
-        fontWeight: 400,
-        lineHeight: 1.7,
-        background: "none"
-      }}>
-        <span style={{ color: "var(--ah-accent)", fontWeight: 700 }}>
-          ArtistryHub
-        </span>{" "}
-        connects passionate artists, crafters, and admirers in a vibrant, supportive community.<br />
-        <br />
-        <span style={{ color: "var(--ah-accent)", fontWeight: 600 }}>
-          Our mission
-        </span>: To empower creative individuals to showcase their artistry, share stories behind every piece, and spark meaningful connections.<br />
-        <br />
-        <span style={{ color: "var(--ah-secondary)", fontWeight: 500 }}>
-          Who is it for?
-        </span> Artists, crafters, and anyone seeking unique, handcrafted inspiration or commissions.<br />
-        <br />
-        <span style={{ color: "var(--ah-accent)", fontWeight: 600 }}>
-          What does it offer?
-        </span> Elegant portfolios, direct connections with makers, art stories, and a welcoming space to discover, connect, and celebrate creativity.
+      <div
+        className="ah-hero-imageblock"
+        style={{
+          flex: 1.7,
+          minWidth: 240,
+          maxWidth: 430,
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+      >
+        <img
+          src={heroImageUrl}
+          alt="ArtistryHub artistic paint brushes, maroon and gold on canvas"
+          style={{
+            width: "100%",
+            maxWidth: 430,
+            height: "auto",
+            objectFit: "cover",
+            borderRadius: 16,
+            boxShadow: "0 14px 42px 0 #ac515199, 0 1px 8px var(--ah-accent)",
+            border: "3px solid var(--ah-accent)",
+            background:
+              "linear-gradient(130deg, #f7f3f1 70%, var(--ah-accent) 150%)"
+          }}
+          loading="eager"
+        />
       </div>
     </section>
   );
