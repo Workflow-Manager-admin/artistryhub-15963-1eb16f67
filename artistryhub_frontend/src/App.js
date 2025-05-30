@@ -686,12 +686,28 @@ function NavigationBar() {
   );
 }
 
-// PUBLIC_INTERFACE (used for demo and header on homepage)
+/*
+ * PUBLIC_INTERFACE (used for demo and header on homepage)
+ * The Home component welcomes users. We'll update its intro to reflect
+ * ArtistryHub's creative, community-driven, and inviting spirit, while
+ * preserving all current style and structure.
+ */
 function Home() {
   return (
     <section>
-      <h1 style={{ color: "var(--ah-primary)", textAlign: "center" }}>Welcome to ArtistryHub!</h1>
-      <p style={{ textAlign: "center" }}>Where creativity finds its audience.</p>
+      <h1 style={{ color: "var(--ah-primary)", textAlign: "center" }}>
+        Welcome to ArtistryHub: Unleash Your Creativity, Connect with Makers, Inspire the World!
+      </h1>
+      <p style={{
+        textAlign: "center",
+        color: "var(--ah-text-faded)",
+        fontSize: "1.18em",
+        marginTop: 13,
+        marginBottom: 0,
+        letterSpacing: "0.01em"
+      }}>
+        Join a vibrant community where artists and crafters showcase passion, share stories, and spark inspiration. Start your journey, display your work, collaborate, and make your mark on a world of creativity.
+      </p>
       {/* Add your custom homepage sections, hero, slider, etc. */}
     </section>
   );
