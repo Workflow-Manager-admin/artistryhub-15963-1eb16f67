@@ -654,7 +654,16 @@ function PortfolioGrid() {
 
 /** ADD BACK MISSING COMPONENTS **/
 
-// ... Marketplace remains unchanged above (full code should be here) ...
+// PUBLIC_INTERFACE (very basic marketplace demo)
+function Marketplace() {
+  return (
+    <section>
+      <h2 style={{ color: "var(--ah-primary)" }}>Marketplace</h2>
+      {/* Replace with real marketplace grid as in full code */}
+      <p>Marketplace items will be shown here.</p>
+    </section>
+  );
+}
 
 // PUBLIC_INTERFACE
 function NavigationBar() {
