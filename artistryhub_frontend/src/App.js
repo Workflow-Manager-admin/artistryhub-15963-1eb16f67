@@ -4,15 +4,15 @@ import "./App.css";
 
 // PUBLIC_INTERFACE
 function PortfolioGrid() {
-  /** Stub for Portfolio Grid */
+  /** Portfolio grid showcasing sample artists and works */
   return (
     <section className="ah-content-section">
       <h2 className="ah-section-title">Artist Portfolios</h2>
       <div className="ah-grid-placeholder">
-        <div className="ah-portfolio-item ah-placeholder">Portfolio Item 1</div>
-        <div className="ah-portfolio-item ah-placeholder">Portfolio Item 2</div>
-        <div className="ah-portfolio-item ah-placeholder">Portfolio Item 3</div>
-        <div className="ah-portfolio-item ah-placeholder">Portfolio Item 4</div>
+        <div className="ah-portfolio-item">Emily Rivera<br /><span style={{fontWeight: 400, fontSize: "0.96em"}}>Handpainted Ceramics</span></div>
+        <div className="ah-portfolio-item">Art by Quentin<br /><span style={{fontWeight: 400, fontSize: "0.96em"}}>Abstract Canvas</span></div>
+        <div className="ah-portfolio-item">Sunlit Weaves<br /><span style={{fontWeight: 400, fontSize: "0.96em"}}>Textile & Fiber Arts</span></div>
+        <div className="ah-portfolio-item">Rosa Goldsmith<br /><span style={{fontWeight: 400, fontSize: "0.96em"}}>Jewelry & Beadwork</span></div>
       </div>
     </section>
   );
@@ -20,14 +20,15 @@ function PortfolioGrid() {
 
 // PUBLIC_INTERFACE
 function Marketplace() {
-  /** Stub for Marketplace */
+  /** Marketplace feature for trending and available crafts */
   return (
     <section className="ah-content-section">
       <h2 className="ah-section-title">Marketplace</h2>
       <div className="ah-marketplace-placeholder">
-        <div className="ah-market-item ah-placeholder">Marketplace Item 1</div>
-        <div className="ah-market-item ah-placeholder">Marketplace Item 2</div>
-        <div className="ah-market-item ah-placeholder">Marketplace Item 3</div>
+        <div className="ah-market-item">"Golden Tides" – Ceramic Mug</div>
+        <div className="ah-market-item">Crimson Knot – Handwoven Scarf</div>
+        <div className="ah-market-item">"Starlit Path" Necklace</div>
+        <div className="ah-market-item">Custom Monogram Canvas</div>
       </div>
     </section>
   );
@@ -38,16 +39,16 @@ function StoriesSidebar() {
   /** Sidebar for behind-the-scenes stories */
   return (
     <aside className="ah-sidebar">
-      <h3 className="ah-sidebar-title">Stories</h3>
+      <h3 className="ah-sidebar-title">Behind the Scenes</h3>
       <ul className="ah-sidebar-list">
         <li className="ah-sidebar-item">
-          <span className="ah-story-title">How I Made This Vase</span>
+          <span className="ah-story-title">Hand-fired pottery in progress</span>
         </li>
         <li className="ah-sidebar-item">
-          <span className="ah-story-title">Weaving With Gold Thread</span>
+          <span className="ah-story-title">Sketches for "Maroon Mirage"</span>
         </li>
         <li className="ah-sidebar-item">
-          <span className="ah-story-title">Painting the Maroon Dream</span>
+          <span className="ah-story-title">Choosing gold accents</span>
         </li>
       </ul>
     </aside>
@@ -62,7 +63,7 @@ function CustomOrdersSidebar() {
       <h3 className="ah-sidebar-title">Custom Orders</h3>
       <ul className="ah-sidebar-list">
         <li className="ah-sidebar-item">Request a hand-painted mug</li>
-        <li className="ah-sidebar-item">Commission a custom portrait</li>
+        <li className="ah-sidebar-item">Commission a pet portrait</li>
         <li className="ah-sidebar-item">Order a bespoke necklace</li>
       </ul>
     </aside>
@@ -71,16 +72,16 @@ function CustomOrdersSidebar() {
 
 // PUBLIC_INTERFACE
 function Messaging() {
-  /** Stub for messaging system */
+  /** Messaging system sample thread */
   return (
     <section className="ah-content-section">
       <h2 className="ah-section-title">Messages</h2>
       <div className="ah-messaging-placeholder">
         <div className="ah-message-thread">
           <div className="ah-msg-sender">Buyer</div>
-          <div className="ah-msg-content">Hi! Can you paint a golden frame?</div>
+          <div className="ah-msg-content">Hello! Are gold trims available for custom cups?</div>
           <div className="ah-msg-sender">Artist</div>
-          <div className="ah-msg-content">Absolutely! I'll sketch options for you.</div>
+          <div className="ah-msg-content">Yes! I can add gold accents—would you like a name or design?</div>
         </div>
       </div>
     </section>
@@ -89,7 +90,7 @@ function Messaging() {
 
 // PUBLIC_INTERFACE
 function Profile() {
-  /** Stub for user profile */
+  /** User profile sample */
   return (
     <section className="ah-content-section">
       <h2 className="ah-section-title">My Profile</h2>
@@ -106,10 +107,10 @@ function Profile() {
 
 /**
  * PUBLIC_INTERFACE
- * GallerySidebar: Showcases a real-time (mocked) feed of artworks/crafts as a gallery or slider.
+ * GallerySidebar: Showcases a real-time (mocked) feed of artworks/crafts.
  */
 function GallerySidebar() {
-  // Mock images: use unsplash or placeimg sources (public images, varied art/craft themes)
+  // Mock gallery images
   const galleryData = [
     { src: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=400&q=80", title: "Painted Canvas" },
     { src: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80", title: "Pottery with Gold" },
@@ -145,11 +146,10 @@ function Home() {
         <section className="ah-hero">
           <div className="ah-hero-heading">ArtistryHub</div>
           <div className="ah-hero-subheading">
-            Where Creativity Connects & <span style={{ color: "var(--ah-accent)", fontWeight: 600 }}>Shines</span>
+            Where Creativity Connects &amp; <span style={{ color: "var(--ah-accent)", fontWeight: 600 }}>Shines</span>
           </div>
           <div className="ah-hero-desc">
-            A curated space for artists and crafters to display, tell, and sell.
-            <br />
+            A curated space for artists and crafters to display, tell, and sell.<br />
             Discover inspiration, order unique crafts, and connect with makers.
           </div>
         </section>
