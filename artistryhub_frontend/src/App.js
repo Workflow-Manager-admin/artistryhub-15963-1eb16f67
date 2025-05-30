@@ -573,19 +573,42 @@ function GallerySidebar() {
  * Home page: Elegant one-section intro about ArtistryHub (mission, audience, offering).
  */
 function Home() {
+  // Flashy animated messages for welcome, on brand
+  const messages = [
+    "Welcome to ArtistryHub!",
+    "Where Creativity Finds Its Audience",
+    "Discover, Connect, and Celebrate Creativity",
+    "Handcrafted. Unique. Elegant.",
+    "Bringing Artists and Admirers Together"
+  ];
+
+  const [currentMsg, setCurrentMsg] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentMsg((prev) => (prev + 1) % messages.length);
+    }, 2800); // Change message every 2.8 seconds
+    return () => clearInterval(interval);
+  }, [messages.length]);
+
   return (
     <section className="ah-hero" style={{ maxWidth: 700, margin: "64px auto 68px auto" }}>
-      <div className="ah-hero-heading" style={{ fontSize: "3.1rem", textAlign: "center" }}>
-        ArtistryHub
+      {/* Animated Welcoming Message */}
+      <div className="ah-hero-heading animated-welcome-text" style={{ fontSize: "3.1rem", textAlign: "center" }}>
+        <span
+          key={currentMsg}
+          className="welcome-fade-in"
+        >
+          {messages[currentMsg]}
+        </span>
       </div>
-      <div className="ah-hero-subheading" style={{ textAlign: "center", fontWeight: 600, marginTop: 6 }}>
-        Where Creativity Finds Its Audience
-      </div>
+      <div className="ah-hero-flashy-underline"></div>
+      {/* Brand summary below the animated intro */}
       <div className="ah-hero-desc" style={{
         textAlign: "center",
-        marginTop: 22,
+        marginTop: 30,
         color: "#ffe3ae",
-        fontSize: "1.22rem",
+        fontSize: "1.18rem",
         fontWeight: 400,
         lineHeight: 1.7,
         background: "none"
