@@ -1689,22 +1689,78 @@ function Home() {
 
   const [currentMsg, setCurrentMsg] = useState(0);
 
-  // Artistic hero background image (maroon/gold/white palette, Unsplash, copyright-safe)
-  // Example: https://unsplash.com/photos/an-artistic-top-down-photo-of-paintbrushes-and-acrylic-paint-on-a-canvas-PUZ9tffheQw
-  // Use width=650 because design will scale on large screens; fallback to 500px for better clarity on lower-end machines.
+  // Featured slider preview data (featured artists/artworks)
+  const featuredSlides = [
+    {
+      artist: "Emily Rivera",
+      artworkTitle: "Golden Tide Vase",
+      desc: "Handpainted ceramics, sunlight and tradition—organic gold accents.",
+      img: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=550&q=80"
+    },
+    {
+      artist: "Art by Quentin",
+      artworkTitle: "Maroon Mirage",
+      desc: "Abstract energy in maroon and shimmering gold.",
+      img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=550&q=80"
+    },
+    {
+      artist: "Sunlit Weaves",
+      artworkTitle: "Harvest Shawl",
+      desc: "Handwoven, nature-dyed wearable tapestry.",
+      img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=550&q=80"
+    }
+  ];
+
+  // Artistic hero background image for parallax effect (not the slider)
   const heroImageUrl =
     "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80";
-  // Maroon/canvas/gold paint, copyright-safe (Unsplash), fits color scheme.
+
+  // Hero parallax scroll
+  const [parallax, setParallax] = useState(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      // Only modest parallax (up to ~28px shift for visual depth)
+      const y = window.scrollY || window.pageYOffset;
+      setParallax(Math.min(1, y / 290));
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentMsg((prev) => (prev + 1) % messages.length);
-    }, 2800); // Change message every 2.8 seconds
+    }, 2800);
     return () => clearInterval(interval);
   }, [messages.length]);
 
-  // Responsive, double column hero section: image on right for large, stacked for mobile.
+  // Carousel slider state for featured artworks
+  const [currentSlide, setCurrentSlide] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % featuredSlides.length);
+    }, 4200);
+    return () => clearInterval(interval);
+  }, [featuredSlides.length]);
+
+  // Animated parallax maroon-gold background style
+  const heroParallaxBg = {
+    transform: `translateY(${-parallax * 28}px) scale(1.01)`,
+    boxShadow: parallax > 0.15 ? "0 12px 42px 0 #ac515138" : "0 6px 40px 0 rgba(128,0,0,0.09)"
+  };
+
+  // Animated CTA
+  const handleCtaHover = (e) => {
+    e.target.classList.add("ah-cta-animated");
+  };
+  const handleCtaOut = (e) => {
+    e.target.classList.remove("ah-cta-animated");
+  };
+
   return (
+    <>
+    {/* HERO WITH PARALLAX */}
     <section
       className="ah-hero ah-hero-with-art-image"
       style={{
@@ -1715,7 +1771,11 @@ function Home() {
         flexDirection: "row",
         alignItems: "center",
         gap: 36,
-        background: "linear-gradient(100deg, var(--ah-primary) 37%, #ac5151 110%)"
+        background: "linear-gradient(100deg, var(--ah-primary) 37%, #ac5151 110%)",
+        position: "relative",
+        ...heroParallaxBg,
+        transition: "box-shadow 0.35s, transform 0.33s",
+        willChange: "transform"
       }}
     >
       <div
@@ -1746,6 +1806,7 @@ function Home() {
           </span>
         </div>
         <div className="ah-hero-flashy-underline"></div>
+
         {/* Brand summary below the animated intro */}
         <div
           className="ah-hero-desc"
@@ -1776,7 +1837,22 @@ function Home() {
             What does it offer?
           </span> Elegant portfolios, direct connections with makers, art stories, and a welcoming space to discover, connect, and celebrate creativity.
         </div>
+        {/* Animated CTA */}
+        <button
+          className="ah-cta-btn"
+          tabIndex={0}
+          style={{ margin: "40px auto 4px auto" }}
+          onMouseEnter={handleCtaHover}
+          onFocus={handleCtaHover}
+          onMouseLeave={handleCtaOut}
+          onBlur={handleCtaOut}
+          onClick={() => window.scrollTo({top: 600, behavior: "smooth"})}
+        >
+          Explore Artist Portfolios
+          <span className="cta-arrow" aria-hidden="true">→</span>
+        </button>
       </div>
+      {/* Decorative hero painting image w/ slight parallax */}
       <div
         className="ah-hero-imageblock"
         style={{
@@ -1787,7 +1863,9 @@ function Home() {
           height: "100%",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center"
+          justifyContent: "center",
+          transform: `translateY(${parallax * 18}px)`,
+          transition: "transform 0.36s cubic-bezier(.66,.01,.27,1.09)"
         }}
       >
         <img
@@ -1808,6 +1886,296 @@ function Home() {
         />
       </div>
     </section>
+    {/* FEATURED ARTIST/ARTWORK SLIDER SECTION */}
+    <section className="ah-featured-slider-section" style={{
+      background: "linear-gradient(94deg, #fffdfa 77%, #fae2bf 133%)",
+      boxShadow: "0 4px 38px #ffd70015, 0 1px 8px #ac515144",
+      borderRadius: 14,
+      margin: "0 auto 50px auto",
+      maxWidth: 930,
+      padding: "36px 5vw 32px 5vw",
+      position: "relative",
+      overflow: "hidden"
+    }}>
+      <div style={{margin: "0 auto 19px auto", textAlign: "center"}}>
+        <span style={{
+          fontFamily: "Georgia, serif",
+          fontWeight: 800,
+          color: "var(--ah-primary)",
+          fontSize: "2.08rem"
+        }}>Featured Artistry</span>
+        <span className="ah-slider-glow-dot" />
+      </div>
+      <div className="ah-featured-slider-wrapper">
+        <button
+          className="ah-slider-arrow"
+          aria-label="Previous featured"
+          tabIndex={0}
+          onClick={() => setCurrentSlide((s) => (s - 1 + featuredSlides.length) % featuredSlides.length)}
+        >‹</button>
+        {featuredSlides.map((slide, idx) => (
+          <div key={slide.artist}
+            className={`ah-slider-slide${idx === currentSlide ? " active" : ""}${Math.abs(currentSlide-idx) === 1 ? " adjacent" : ""}`}
+            style={{
+              opacity: idx === currentSlide ? 1 : 0.3,
+              transform: idx === currentSlide
+                ? "scale(1.01) translateY(0)"
+                : `scale(0.92) translateY(${Math.abs(currentSlide-idx)*24}px)`,
+              zIndex: idx === currentSlide ? 3 : 1,
+              pointerEvents: idx === currentSlide ? "auto" : "none"
+            }}
+          >
+            <img
+              src={slide.img}
+              alt={slide.artworkTitle}
+              className="ah-slider-art-img"
+              loading="lazy"
+            />
+            <div className="ah-slider-slide-info">
+              <span className="ah-slider-art-title">{slide.artworkTitle}</span>
+              <span className="ah-slider-art-artist">by {slide.artist}</span>
+              <span className="ah-slider-art-desc">{slide.desc}</span>
+            </div>
+          </div>
+        ))}
+        <button
+          className="ah-slider-arrow"
+          aria-label="Next featured"
+          tabIndex={0}
+          onClick={() => setCurrentSlide((s) => (s + 1) % featuredSlides.length)}
+        >›</button>
+      </div>
+      <div className="ah-slider-dot-row">
+        {featuredSlides.map((_, idx) => (
+          <span
+            key={idx}
+            className={`ah-slider-dot${idx === currentSlide ? " active" : ""}`}
+            aria-label={idx === currentSlide ? "Current slide" : undefined}
+            onClick={() => setCurrentSlide(idx)}
+            tabIndex={0}
+          />
+        ))}
+      </div>
+    </section>
+    {/* Interactive scroll transition JS helper */}
+    <style>{`
+      /* Gold shimmer hover for CTA */
+      .ah-cta-btn {
+        background: linear-gradient(98deg, var(--ah-primary) 56%, var(--ah-accent) 210%);
+        color: var(--ah-accent);
+        border: none;
+        border-radius: 2em;
+        font-size: 1.24rem;
+        font-weight: 800;
+        box-shadow: 0 4px 22px #ac515127, 0 1px 9px #FFD70025;
+        padding: 18px 40px 17px 38px;
+        margin-top: 23px;
+        letter-spacing: 1.1px;
+        cursor: pointer;
+        outline: none;
+        min-width: 238px;
+        transition: background 0.29s, box-shadow 0.18s, color 0.13s, transform 0.22s;
+        position: relative;
+        overflow: hidden;
+        will-change: transform;
+        z-index: 4;
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .ah-cta-btn .cta-arrow {
+        margin-left: 6px;
+        font-weight: 900;
+        font-size: 1.7em;
+        color: var(--ah-accent);
+        opacity: 0.93;
+        transition: color 0.19s, transform 0.19s;
+      }
+      .ah-cta-btn.ah-cta-animated,
+      .ah-cta-btn:active,
+      .ah-cta-btn:focus {
+        background: linear-gradient(86deg, var(--ah-accent) 70%, var(--ah-primary) 126%);
+        color: var(--ah-primary);
+        box-shadow: 0 11px 32px #ffd90035, 0 2px 16px #FFD70016;
+        transform: scale(1.048) translateY(-2.5px) perspective(44px) rotateX(2.5deg);
+      }
+      .ah-cta-btn.ah-cta-animated .cta-arrow,
+      .ah-cta-btn:active .cta-arrow,
+      .ah-cta-btn:focus .cta-arrow {
+        color: var(--ah-primary);
+        transform: translateX(1px) scale(1.05);
+      }
+      /* ---- Featured Slider Section ---- */
+      .ah-featured-slider-section {
+        margin-top: 18px;
+        margin-bottom: 0;
+        background: linear-gradient(94deg,#fffdfa 77%,#fae2bf 133%);
+        box-shadow: 0 4px 38px #ffd70015,0 1px 8px #ac515144;
+        border-radius: 14px;
+      }
+      .ah-slider-glow-dot {
+        display: inline-block;
+        width: 20px;
+        height: 18px;
+        border-radius: 100px;
+        margin-left: 18px;
+        margin-bottom: 6px;
+        background: radial-gradient(circle,var(--ah-accent) 60%,#ffe3ae 99%,transparent 100%);
+        box-shadow: 0 1px 12px #ffd900b5,0 2.5px 14px #ffd90049;
+        animation: glowPulse 2.5s infinite alternate;
+        vertical-align: middle;
+      }
+      @keyframes glowPulse {
+        0% { box-shadow:0 1.3px 24px #ffd900b5, 0 0 0 #ffd700b5;}
+        65% { box-shadow: 0 0.8px 20px #ffd900b5,0 2px 14px #ffd90029;}
+        100% { box-shadow: 0 3px 24px #ffd700b5,0 2px 14px #ffd90049;}
+      }
+      .ah-featured-slider-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2.8vw;
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 12px 0;
+        scroll-snap-type: x mandatory;
+      }
+      .ah-slider-arrow {
+        font-size: 2em;
+        color: var(--ah-primary);
+        background: linear-gradient(93deg, #ffd90037 70%, #fff8e3 120%);
+        border: none;
+        border-radius: 69px;
+        width: 44px;
+        height: 44px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.93;
+        box-shadow: 0 2px 10px #ffd90022,0 2.5px 6px #ac5151;
+        transition: background 0.17s, transform 0.12s;
+        position: relative;
+        z-index: 10;
+      }
+      .ah-slider-arrow:hover, .ah-slider-arrow:focus {
+        background: linear-gradient(84deg, var(--ah-accent) 50%, #ffe3ae 120%);
+        color: var(--ah-primary);
+        transform: scale(1.09);
+      }
+      .ah-slider-slide {
+        background: linear-gradient(109deg, #fffbe9 77%, #fae2bf 170%);
+        border-radius: 13px;
+        box-shadow: 0 2px 16px #ffd7002a,0 1px 5px #ac515129;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: transform 0.37s cubic-bezier(.48,.01,.35,1.18), opacity 0.27s;
+        padding: 23px 28px 23px 28px;
+        min-width: 228px;
+        max-width: 350px;
+        width: 86vw;
+        margin: 0 1vw;
+        position: relative;
+        z-index: 2;
+        scroll-snap-align: center;
+        cursor: pointer;
+        opacity: 0.55;
+        border: 2.1px solid var(--ah-border);
+      }
+      .ah-slider-slide.active {
+        opacity: 1.0;
+        border: 2.7px solid var(--ah-accent);
+        box-shadow: 0 8px 40px #ffd7001e, 0 2px 18px #ac515139;
+      }
+      .ah-slider-slide.adjacent {
+        opacity: 0.8;
+      }
+      .ah-slider-art-img {
+        width: 100%;
+        max-width: 295px;
+        min-width: 180px;
+        aspect-ratio: 4/3;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        box-shadow: 0 1px 16px #ffd70032, 0 2px 12px #ac515147;
+        border: 2.1px solid var(--ah-primary);
+        transition: border-color 0.18s, box-shadow 0.17s;
+      }
+      .ah-slider-slide.active .ah-slider-art-img {
+        border: 2.9px solid var(--ah-accent);
+        box-shadow: 0 9px 45px #ffd70048;
+      }
+      .ah-slider-slide-info {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        align-items: center;
+        margin-top: 2px;
+        min-width: 120px;
+      }
+      .ah-slider-art-title {
+        font-size: 1.16em;
+        font-weight: 800;
+        color: var(--ah-primary);
+        font-family: Georgia, serif;
+      }
+      .ah-slider-art-artist {
+        color: #BC752F;
+        font-weight: 500;
+        font-size: 1.01em;
+        font-style: italic;
+      }
+      .ah-slider-art-desc {
+        color: var(--ah-text-main);
+        font-size: 0.98em;
+        opacity: 0.83;
+        margin-bottom: 2px;
+      }
+      .ah-slider-dot-row {
+        display: flex;
+        justify-content: center;
+        gap: 13px;
+        margin: 18px 0 0 0;
+      }
+      .ah-slider-dot {
+        width: 18px;
+        height: 8px;
+        background: #ad7843;
+        border-radius: 8px;
+        opacity: 0.48;
+        box-shadow: 0 2px 10px #ffd70025;
+        cursor: pointer;
+        transition: background 0.22s, opacity 0.14s, width 0.16s;
+      }
+      .ah-slider-dot.active {
+        background: linear-gradient(90deg, var(--ah-accent) 50%, #ffe3ae 140%);
+        opacity: 1.0;
+        width: 28px;
+      }
+      /* Parallax background fade on homepage, slider section */
+      .ah-featured-slider-section {
+        animation: fadeDownAppear 0.78s ease;
+        will-change: box-shadow,background;
+      }
+      @keyframes fadeDownAppear {
+        from { opacity: 0; transform: translateY(-38px) scale(.97);}
+        to   { opacity: 1; transform: none;}
+      }
+      @media (max-width: 690px) {
+        .ah-featured-slider-section {
+          padding: 15px 1vw 18px 2vw;
+        }
+        .ah-slider-slide {padding: 11px 4vw 11px 4vw;}
+        .ah-slider-art-img { max-width: 196px; }
+      }
+      @media (max-width:510px) {
+        .ah-slider-art-img { max-width: 93vw; }
+      }
+    `}
+    </style>
+    </>
   );
 }
 
