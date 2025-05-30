@@ -1,0 +1,4 @@
+{
+    "command": "npm run test",
+    "working_directory": "/home/kavia/workspace/code-generation/artistryhub-15963-1eb16f67/artistryhub_frontend"
+}
