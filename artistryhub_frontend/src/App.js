@@ -1,39 +1,21 @@
 import React from 'react';
 import './App.css';
+import { Link, Routes, Route } from 'react-router-dom';
 
-// PUBLIC_INTERFACE
-function App() {
+// Skeleton pages for each route
+function Home() {
   return (
-    <div className="app">
-      <nav className="navbar">
-        <div className="container navbar-content">
-          <div className="logo">
-            <span className="logo-symbol">🎨</span> ArtistryHub
-          </div>
-          <ul className="navbar-links">
-            <li><a href="#">Portfolios</a></li>
-            <li><a href="#">Marketplace</a></li>
-            <li><a href="#">Stories</a></li>
-            <li><a href="#">Custom Orders</a></li>
-            <li><a href="#">Profile</a></li>
-          </ul>
+    <section className="hero">
+      <div className="container">
+        <div className="subtitle">Welcome to a community of creativity</div>
+        <h1 className="title">Discover Makers, Masterpieces & Stories</h1>
+        <div className="description">
+          Explore unique artist portfolios, trending crafts, and inspiring stories.<br/>
+          Commission custom works and join a vibrant marketplace built for creators and collectors.
         </div>
-      </nav>
-
-      {/* HERO */}
-      <section className="hero">
-        <div className="container">
-          <div className="subtitle">Welcome to a community of creativity</div>
-          <h1 className="title">Discover Makers, Masterpieces & Stories</h1>
-          <div className="description">
-            Explore unique artist portfolios, trending crafts, and inspiring stories.<br/>
-            Commission custom works and join a vibrant marketplace built for creators and collectors.
-          </div>
-          <button className="btn btn-large">Browse Marketplace</button>
-        </div>
-      </section>
-
-      {/* MAIN GRID LAYOUT */}
+        <button className="btn btn-large">Browse Marketplace</button>
+      </div>
+      {/* You can keep the portfolios and main-grid here for / */}
       <main className="main-grid container">
         {/* LEFT: Portfolios & Crafts */}
         <section className="main-portfolios" aria-label="Portfolios and Crafts">
@@ -93,6 +75,87 @@ function App() {
           </div>
         </aside>
       </main>
+    </section>
+  );
+}
+
+function Portfolios() {
+  return (
+    <div className="container" style={{marginTop: "110px"}}>
+      <h2 className="title" style={{fontSize: "2rem"}}>Artist Portfolios</h2>
+      <p className="description">Browse portfolios of talented artists and crafters.</p>
+      {/* Placeholder content */}
+    </div>
+  );
+}
+
+function Marketplace() {
+  return (
+    <div className="container" style={{marginTop:"110px"}}>
+      <h2 className="title" style={{fontSize: "2rem"}}>Marketplace</h2>
+      <p className="description">Explore and purchase unique artworks and crafts.</p>
+      {/* Placeholder content */}
+    </div>
+  );
+}
+
+function Stories() {
+  return (
+    <div className="container" style={{marginTop:"110px"}}>
+      <h2 className="title" style={{fontSize: "2rem"}}>Stories</h2>
+      <p className="description">Read behind-the-scenes stories from creators.</p>
+      {/* Placeholder content */}
+    </div>
+  );
+}
+
+function CustomOrders() {
+  return (
+    <div className="container" style={{marginTop:"110px"}}>
+      <h2 className="title" style={{fontSize: "2rem"}}>Custom Orders</h2>
+      <p className="description">Request a custom, one-of-a-kind craft or artwork.</p>
+      {/* Placeholder content */}
+    </div>
+  );
+}
+
+function Profile() {
+  return (
+    <div className="container" style={{marginTop:"110px"}}>
+      <h2 className="title" style={{fontSize: "2rem"}}>Your Profile</h2>
+      <p className="description">View and manage your ArtistryHub profile and orders.</p>
+      {/* Placeholder content */}
+    </div>
+  );
+}
+
+// PUBLIC_INTERFACE
+function App() {
+  return (
+    <div className="app">
+      <nav className="navbar">
+        <div className="container navbar-content">
+          <div className="logo">
+            <span className="logo-symbol">🎨</span> ArtistryHub
+          </div>
+          <ul className="navbar-links">
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/portfolios">Portfolios</Link></li>
+            <li><Link to="/marketplace">Marketplace</Link></li>
+            <li><Link to="/stories">Stories</Link></li>
+            <li><Link to="/custom-orders">Custom Orders</Link></li>
+            <li><Link to="/profile">Profile</Link></li>
+          </ul>
+        </div>
+      </nav>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/portfolios" element={<Portfolios />} />
+        <Route path="/marketplace" element={<Marketplace />} />
+        <Route path="/stories" element={<Stories />} />
+        <Route path="/custom-orders" element={<CustomOrders />} />
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
     </div>
   );
 }
