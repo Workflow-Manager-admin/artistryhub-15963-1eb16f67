@@ -568,30 +568,46 @@ function GallerySidebar() {
   );
 }
 
-// PUBLIC_INTERFACE
+/**
+ * PUBLIC_INTERFACE
+ * Home page: Elegant one-section intro about ArtistryHub (mission, audience, offering).
+ */
 function Home() {
-  /** Home page with hero, grid, and sidebars */
   return (
-    <div className="ah-main-layout">
-      <div className="ah-main-content">
-        <section className="ah-hero">
-          <div className="ah-hero-heading">ArtistryHub</div>
-          <div className="ah-hero-subheading">
-            Where Creativity Connects &amp; <span style={{ color: "var(--ah-accent)", fontWeight: 600 }}>Shines</span>
-          </div>
-          <div className="ah-hero-desc">
-            A curated space for artists and crafters to display, tell, and sell.<br />
-            Discover inspiration, order unique crafts, and connect with makers.
-          </div>
-        </section>
-        <PortfolioGrid />
+    <section className="ah-hero" style={{ maxWidth: 700, margin: "64px auto 68px auto" }}>
+      <div className="ah-hero-heading" style={{ fontSize: "3.1rem", textAlign: "center" }}>
+        ArtistryHub
       </div>
-      <div className="ah-sidebars">
-        <GallerySidebar />
-        <StoriesSidebar />
-        <CustomOrdersSidebar />
+      <div className="ah-hero-subheading" style={{ textAlign: "center", fontWeight: 600, marginTop: 6 }}>
+        Where Creativity Finds Its Audience
       </div>
-    </div>
+      <div className="ah-hero-desc" style={{
+        textAlign: "center",
+        marginTop: 22,
+        color: "#ffe3ae",
+        fontSize: "1.22rem",
+        fontWeight: 400,
+        lineHeight: 1.7,
+        background: "none"
+      }}>
+        <span style={{ color: "var(--ah-accent)", fontWeight: 700 }}>
+          ArtistryHub
+        </span>{" "}
+        connects passionate artists, crafters, and admirers in a vibrant, supportive community.<br />
+        <br />
+        <span style={{ color: "var(--ah-accent)", fontWeight: 600 }}>
+          Our mission
+        </span>: To empower creative individuals to showcase their artistry, share stories behind every piece, and spark meaningful connections.<br />
+        <br />
+        <span style={{ color: "var(--ah-secondary)", fontWeight: 500 }}>
+          Who is it for?
+        </span> Artists, crafters, and anyone seeking unique, handcrafted inspiration or commissions.<br />
+        <br />
+        <span style={{ color: "var(--ah-accent)", fontWeight: 600 }}>
+          What does it offer?
+        </span> Elegant portfolios, direct connections with makers, art stories, and a welcoming space to discover, connect, and celebrate creativity.
+      </div>
+    </section>
   );
 }
 
