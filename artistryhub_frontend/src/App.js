@@ -2,17 +2,136 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, NavLink, Navigate } from "react-router-dom";
 import "./App.css";
 
+import React, { useEffect, useState } from "react";
+
 // PUBLIC_INTERFACE
 function PortfolioGrid() {
-  /** Portfolio grid showcasing sample artists and works */
+  /**
+   * Portfolio grid showcasing sample artists and works.
+   * Attempts to fetch artwork images from Unsplash demo endpoint, else uses realistic art placeholders.
+   */
+  const demoPortfolios = [
+    {
+      name: "Emily Rivera",
+      desc: "Handpainted Ceramics",
+      query: "ceramics pottery"
+    },
+    {
+      name: "Art by Quentin",
+      desc: "Abstract Canvas",
+      query: "abstract art"
+    },
+    {
+      name: "Sunlit Weaves",
+      desc: "Textile & Fiber Arts",
+      query: "textile fiber art"
+    },
+    {
+      name: "Rosa Goldsmith",
+      desc: "Jewelry & Beadwork",
+      query: "artisan jewelry"
+    }
+  ];
+
+  const fallbackImages = [
+    // These are copyright-safe, realistic Unsplash images to use if fetch fails or rate limited.
+    "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80",
+    "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=400&q=80",
+    "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
+    "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80"
+  ];
+
+  const [images, setImages] = useState(fallbackImages);
+
+  useEffect(() => {
+    // Fetch images from Unsplash Source API (does not require an API key)
+    // This approach is suitable for demo/prototyping, using the free source endpoint
+    // See: https://source.unsplash.com/
+    // Results will vary per refresh, but always real & current images.
+
+    // Map each portfolio's query to a unique source.unslash.com image URL
+    const unsplashImageUrls = demoPortfolios.map((p, idx) =>
+      `https://source.unsplash.com/400x300/?${encodeURIComponent(p.query)}`
+    );
+
+    // Try prefetching all images; fallback instantly to the default set if error.
+    Promise.all(
+      unsplashImageUrls.map(
+        (url) =>
+          new Promise((resolve) => {
+            // Preload image to detect broken or throttled URLs
+            const img = new window.Image();
+            img.onload = () => resolve(url);
+            img.onerror = () => resolve(fallbackImages[Math.floor(Math.random()*fallbackImages.length)]);
+            img.src = url;
+          })
+      )
+    ).then((results) => setImages(results));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <section className="ah-content-section">
       <h2 className="ah-section-title">Artist Portfolios</h2>
       <div className="ah-grid-placeholder">
-        <div className="ah-portfolio-item">Emily Rivera<br /><span style={{fontWeight: 400, fontSize: "0.96em"}}>Handpainted Ceramics</span></div>
-        <div className="ah-portfolio-item">Art by Quentin<br /><span style={{fontWeight: 400, fontSize: "0.96em"}}>Abstract Canvas</span></div>
-        <div className="ah-portfolio-item">Sunlit Weaves<br /><span style={{fontWeight: 400, fontSize: "0.96em"}}>Textile & Fiber Arts</span></div>
-        <div className="ah-portfolio-item">Rosa Goldsmith<br /><span style={{fontWeight: 400, fontSize: "0.96em"}}>Jewelry & Beadwork</span></div>
+        {demoPortfolios.map((p, idx) => (
+          <div
+            className="ah-portfolio-item"
+            key={p.name}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              padding: 0,
+              overflow: "hidden",
+              background: "var(--ah-light)",
+              border: "2.5px solid var(--ah-border)",
+              boxShadow: "0 1px 12px rgba(128,0,0,0.04)"
+            }}
+          >
+            <div
+              style={{
+                width: "100%",
+                aspectRatio: "4/3",
+                background: "#eee",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                overflow: "hidden"
+              }}
+            >
+              <img
+                src={images[idx] || fallbackImages[idx % fallbackImages.length]}
+                alt={`${p.desc} by ${p.name}`}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  borderTopLeftRadius: "8px",
+                  borderTopRightRadius: "8px"
+                }}
+                loading="lazy"
+              />
+            </div>
+            <div style={{
+              padding: "13px 16px 8px 16px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "3px"
+            }}>
+              <span style={{
+                fontWeight: 700,
+                fontSize: "1.09em",
+                color: "var(--ah-primary)"
+              }}>{p.name}</span>
+              <span style={{
+                fontWeight: 400,
+                fontSize: "0.97em",
+                color: "var(--ah-text-faded)",
+                fontStyle: "italic"
+              }}>{p.desc}</span>
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );
