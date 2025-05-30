@@ -1,8 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, NavLink, Navigate } from "react-router-dom";
 import "./App.css";
-
-import React, { useEffect, useState } from "react";
 
 // PUBLIC_INTERFACE
 function PortfolioGrid() {
