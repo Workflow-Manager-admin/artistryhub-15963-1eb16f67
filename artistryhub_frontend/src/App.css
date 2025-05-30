@@ -1,108 +1,146 @@
 :root {
-  --kavia-orange: #E87A41;
-  --kavia-dark: #1A1A1A;
-  --text-color: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --border-color: rgba(255, 255, 255, 0.1);
+  /* ArtistryHub Brand Palette */
+  --primary-maroon: #800000;
+  --secondary-white: #FFFFFF;
+  --accent-gold: #FFD700;
+
+  /* ArtistryHub Global Theme */
+  --background-main: var(--secondary-white);
+  --text-primary: var(--primary-maroon);
+  --text-secondary: #563939;
+  --border-light: #F3EDED;
 }
 
+/* GLOBAL: Base Body and Typography */
 body {
   margin: 0;
   font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif;
-  background-color: var(--kavia-dark);
-  color: var(--text-color);
+  background-color: var(--background-main);
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* GLOBAL: App Structure */
 .app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: var(--background-main);
 }
 
+/* HEADER/NAVBAR */
 .navbar {
-  background-color: var(--kavia-dark);
-  padding: 16px;
+  background-color: var(--secondary-white);
+  padding: 16px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1.5px solid var(--border-light);
   position: fixed;
   top: 0;
   width: 100%;
   box-sizing: border-box;
   z-index: 100;
+  transition: box-shadow 0.15s;
+  box-shadow: 0 2px 16px 0 rgba(128,0,0,0.02);
 }
 
+/* LOGO */
 .logo {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.35rem;
+  font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  letter-spacing: 0.5px;
+  color: var(--primary-maroon);
 }
 
 .logo-symbol {
-  color: var(--kavia-orange);
+  color: var(--accent-gold);
+  font-size: 1.4em;
 }
 
+/* LAYOUT CONTAINER */
 .container {
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 28px;
   width: 100%;
   box-sizing: border-box;
 }
 
+/* HERO SECTION */
 .hero {
-  padding-top: 120px;
-  padding-bottom: 64px;
+  padding-top: 110px;
+  padding-bottom: 60px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 26px;
 }
 
+/* TYPOGRAPHY */
 .subtitle {
-  color: var(--kavia-orange);
+  color: var(--accent-gold);
   font-weight: 500;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
+  letter-spacing: 1px;
 }
 
 .title {
-  font-size: 3.5rem;
-  font-weight: 600;
-  line-height: 1.2;
+  font-size: 3.6rem;
+  font-weight: 700;
+  line-height: 1.19;
   margin: 0;
+  color: var(--primary-maroon);
+  letter-spacing: 0.5px;
 }
 
 .description {
-  font-size: 1.1rem;
+  font-size: 1.13rem;
   line-height: 1.5;
   color: var(--text-secondary);
   max-width: 600px;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
+/* BUTTONS */
 .btn {
-  background-color: var(--kavia-orange);
-  color: white;
+  background-color: var(--accent-gold);
+  color: var(--primary-maroon);
   border: none;
   border-radius: 4px;
-  padding: 10px 20px;
+  padding: 10px 22px;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background 0.22s, box-shadow 0.22s;
+  box-shadow: 0 1px 8px 0 rgba(128,0,0,0.04);
+  outline: none;
 }
 
 .btn:hover {
-  background-color: #FF8B4D;
+  background-color: #ffe67c;
+  color: var(--primary-maroon);
+  box-shadow: 0 4px 16px 0 rgba(128,0,0,0.09);
 }
 
 .btn-large {
-  padding: 12px 24px;
-  font-size: 1.1rem;
+  padding: 13px 30px;
+  font-size: 1.09rem;
+  border-radius: 5px;
+}
+
+/* Remove Legacy/KAVIA color classes (no longer used) */
+
+/* GENERAL: For modern/elegant light theme, keep spacing and layout clean */
+::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--secondary-white);
 }
