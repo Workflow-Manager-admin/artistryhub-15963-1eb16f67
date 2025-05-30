@@ -4,6 +4,7 @@ import "./App.css";
 
 // PUBLIC_INTERFACE
 function Home() {
+  // Classic, static, simple Home introduction only
   return (
     <section style={{ margin: "48px auto", maxWidth: 680 }}>
       <h1 style={{ color: "var(--ah-primary)", textAlign: "center", marginTop: 42 }}>
