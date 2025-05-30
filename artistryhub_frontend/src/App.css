@@ -134,6 +134,78 @@ html {
   text-align: left;
 }
 
+/* Artistic hero with image for Home */
+.ah-hero-with-art-image {
+  padding: 46px 38px 32px 36px !important;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-height: 345px;
+  gap: 36px;
+  position: relative;
+}
+.ah-hero-with-art-image .ah-hero-textblock {
+  z-index: 2;
+  flex: 2.2;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.ah-hero-with-art-image .ah-hero-imageblock {
+  flex: 1.7;
+  min-width: 240px;
+  max-width: 430px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ah-hero-with-art-image .ah-hero-imageblock img {
+  width: 100%;
+  max-width: 430px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 14px 42px 0 #ac515199, 0 1px 8px var(--ah-accent);
+  border: 3px solid var(--ah-accent);
+  background: linear-gradient(130deg, #f7f3f1 70%, var(--ah-accent) 150%);
+}
+
+@media (max-width: 920px) {
+  .ah-hero-with-art-image {
+    flex-direction: column;
+    gap: 22px;
+    padding: 34px 9vw 22px 9vw !important;
+  }
+  .ah-hero-with-art-image .ah-hero-imageblock {
+    max-width: 355px;
+    margin: 0 auto 0 auto;
+  }
+  .ah-hero-with-art-image .ah-hero-textblock {
+    max-width: 530px;
+  }
+}
+
+@media (max-width: 600px) {
+  .ah-hero-with-art-image {
+    padding: 16px 2vw 17px 2vw !important;
+    min-height: 220px;
+  }
+  .ah-hero-with-art-image .ah-hero-textblock {
+    min-width: unset;
+    padding: 0 0 0 0;
+    font-size: 0.92em;
+  }
+  .ah-hero-with-art-image .ah-hero-imageblock {
+    max-width: 94vw;
+    min-width: 0;
+  }
+  .ah-hero-with-art-image .ah-hero-imageblock img {
+    max-width: 99vw;
+  }
+}
+
 .ah-hero-heading {
   font-size: 2.9rem;
   font-weight: 800;
