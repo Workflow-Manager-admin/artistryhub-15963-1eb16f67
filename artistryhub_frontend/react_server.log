@@ -77,3 +77,166 @@ ERROR in ./src/App.js 5:0-93
 Module not found: Error: Can't resolve 'react-router-dom' in '/home/kavia/workspace/code-generation/artistryhub-15963-1eb16f67/artistryhub_frontend/src'
 
 webpack compiled with 1 error
+Compiling...
+Failed to compile.
+
+Module not found: Error: Can't resolve 'react-router-dom' in '/home/kavia/workspace/code-generation/artistryhub-15963-1eb16f67/artistryhub_frontend/src'
+LOG from webpack.FileSystemInfo
+<w> Managed item /home/kavia/workspace/code-generation/artistryhub-15963-1eb16f67/artistryhub_frontend/node_modules/react-router-dom isn't a directory or doesn't contain a package.json (see snapshot.managedPaths option)
++ 13 hidden lines
+
+ERROR in ./src/App.js 5:0-93
+Module not found: Error: Can't resolve 'react-router-dom' in '/home/kavia/workspace/code-generation/artistryhub-15963-1eb16f67/artistryhub_frontend/src'
+
+webpack compiled with 1 error
+Compiling...
+Failed to compile.
+
+Attempted import error: 'NavLink' is not exported from 'react-router-dom' (imported as 'NavLink').
+LOG from webpack.FileSystemInfo
+<w> Managed item /home/kavia/workspace/code-generation/artistryhub-15963-1eb16f67/artistryhub_frontend/node_modules/react-router isn't a directory or doesn't contain a package.json (see snapshot.managedPaths option)
++ 13 hidden lines
+
+ERROR in ./src/App.js 440:38-45
+export 'NavLink' (imported as 'NavLink') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 465:40-47
+export 'NavLink' (imported as 'NavLink') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 475:39-46
+export 'NavLink' (imported as 'NavLink') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 485:39-46
+export 'NavLink' (imported as 'NavLink') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 495:39-46
+export 'NavLink' (imported as 'NavLink') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 526:30-36
+export 'BrowserRouter' (imported as 'Router') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 535:39-45
+export 'Routes' (imported as 'Routes') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 536:42-47
+export 'Route' (imported as 'Route') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 547:41-46
+export 'Route' (imported as 'Route') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 558:41-46
+export 'Route' (imported as 'Route') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 569:41-46
+export 'Route' (imported as 'Route') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 580:41-46
+export 'Route' (imported as 'Route') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 591:41-46
+export 'Route' (imported as 'Route') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 593:42-50
+export 'Navigate' (imported as 'Navigate') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./node_modules/react-router-dom/dist/index.mjs 13:0-66
+Module not found: Error: Can't resolve 'react-router/dom' in '/home/kavia/workspace/code-generation/artistryhub-15963-1eb16f67/artistryhub_frontend/node_modules/react-router-dom/dist'
+
+ERROR in ./node_modules/react-router-dom/dist/index.mjs 14:0-29
+Module not found: Error: Can't resolve 'react-router' in '/home/kavia/workspace/code-generation/artistryhub-15963-1eb16f67/artistryhub_frontend/node_modules/react-router-dom/dist'
+
+webpack compiled with 16 errors
+Compiling...
+Failed to compile.
+
+Attempted import error: 'NavLink' is not exported from 'react-router-dom' (imported as 'NavLink').
+ERROR in ./src/App.js 440:38-45
+export 'NavLink' (imported as 'NavLink') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 465:40-47
+export 'NavLink' (imported as 'NavLink') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 475:39-46
+export 'NavLink' (imported as 'NavLink') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 485:39-46
+export 'NavLink' (imported as 'NavLink') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 495:39-46
+export 'NavLink' (imported as 'NavLink') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 526:30-36
+export 'BrowserRouter' (imported as 'Router') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 535:39-45
+export 'Routes' (imported as 'Routes') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 536:42-47
+export 'Route' (imported as 'Route') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 547:41-46
+export 'Route' (imported as 'Route') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 558:41-46
+export 'Route' (imported as 'Route') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 569:41-46
+export 'Route' (imported as 'Route') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 580:41-46
+export 'Route' (imported as 'Route') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 591:41-46
+export 'Route' (imported as 'Route') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 593:42-50
+export 'Navigate' (imported as 'Navigate') was not found in 'react-router-dom' (module has no exports)
+
+webpack compiled with 14 errors
+Compiling...
+Failed to compile.
+
+Attempted import error: 'NavLink' is not exported from 'react-router-dom' (imported as 'NavLink').
+ERROR in ./src/App.js 440:38-45
+export 'NavLink' (imported as 'NavLink') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 465:40-47
+export 'NavLink' (imported as 'NavLink') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 475:39-46
+export 'NavLink' (imported as 'NavLink') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 485:39-46
+export 'NavLink' (imported as 'NavLink') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 495:39-46
+export 'NavLink' (imported as 'NavLink') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 526:30-36
+export 'BrowserRouter' (imported as 'Router') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 535:39-45
+export 'Routes' (imported as 'Routes') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 536:42-47
+export 'Route' (imported as 'Route') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 547:41-46
+export 'Route' (imported as 'Route') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 558:41-46
+export 'Route' (imported as 'Route') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 569:41-46
+export 'Route' (imported as 'Route') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 580:41-46
+export 'Route' (imported as 'Route') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 591:41-46
+export 'Route' (imported as 'Route') was not found in 'react-router-dom' (module has no exports)
+
+ERROR in ./src/App.js 593:42-50
+export 'Navigate' (imported as 'Navigate') was not found in 'react-router-dom' (module has no exports)
+
+webpack compiled with 14 errors
