@@ -7,8 +7,108 @@ import "./App.css";
  * Enhanced: PortfolioGrid displays cards with artist/artwork metadata, a like button, category filtering,
  * and a modal for details. The UI is brand-consistent and interactive.
  */
+/**
+ * Utility: Custom Tooltip component (accessible, mouse/focus, dynamic position, on-brand)
+ */
+function Tooltip({ children, label, shown }) {
+  const tipRef = useRef();
+  // Calculate tooltip style dynamically
+  useEffect(() => {
+    if (shown && tipRef.current) {
+      // Center horizontally
+      let rect = tipRef.current.parentNode.getBoundingClientRect();
+      let tRect = tipRef.current.getBoundingClientRect();
+      let desiredLeft = Math.max(rect.left + rect.width / 2 - tRect.width / 2, 6);
+      if (desiredLeft + tRect.width > window.innerWidth - 6) {
+        tipRef.current.style.left = `${window.innerWidth - tRect.width - 6}px`;
+      } else {
+        tipRef.current.style.left = desiredLeft + "px";
+      }
+    }
+  }, [shown, label]);
+
+  return (
+    <span
+      className="ah-tooltip"
+      style={{
+        visibility: shown ? "visible" : "hidden",
+        opacity: shown ? 1 : 0,
+        zIndex: 50
+      }}
+      role="tooltip"
+      ref={tipRef}
+    >
+      {label}
+    </span>
+  );
+}
+
+/**
+ * Utility: Simple confetti burst (vanilla SVGs, on-brand gold/maroon/white, CSS-animated)
+ */
+function ConfettiBurst({ triggerKey }) {
+  // Each time triggerKey changes/confetti is needed, re-render confetti
+  // Small variant for button, bigger for modal
+  const confettiCount = 16;
+  const radii = [2, 2.6, 1.9, 2.1, 2.9, 1.4, 2.5, 2];
+  const colors = [
+    "var(--ah-accent)",
+    "var(--ah-accent)",
+    "var(--ah-primary)",
+    "var(--ah-primary)",
+    "var(--ah-secondary)",
+    "#FFF8DB"
+  ];
+
+  return (
+    <span className="ah-confetti-burst" aria-hidden="true">
+      {[...Array(confettiCount)].map((_, idx) => {
+        const angle = (idx / confettiCount) * 2 * Math.PI;
+        const x = Math.sin(angle) * 38 + 22;
+        const y = Math.cos(angle) * 34 + 15;
+        return (
+          <svg
+            key={triggerKey + "-" + idx}
+            width={9 + (idx % 7)}
+            height={9 + (idx % 6)}
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "56%",
+              transform: `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${1 + (idx % 2) * 0.18}) rotate(${angle * 80 + idx * 16}deg)`,
+              pointerEvents: "none"
+            }}
+          >
+            <circle
+              cx="5"
+              cy="5"
+              r={radii[idx % radii.length]}
+              fill={colors[idx % colors.length]}
+            />
+          </svg>
+        );
+      })}
+    </span>
+  );
+}
+
+/**
+ * Utility: Small spring out-bounce animation (triggered for like button)
+ */
+function useSpringBounce(trigger) {
+  const [bounce, setBounce] = useState(false);
+  useEffect(() => {
+    if (trigger) {
+      setBounce(true);
+      const t = setTimeout(() => setBounce(false), 470);
+      return () => clearTimeout(t);
+    }
+  }, [trigger]);
+  return bounce;
+}
+
 function PortfolioGrid() {
-  // Mocked portfolio data for demo
+  // ...[Data/state as before]...
   const demoPortfolios = [
     {
       id: 1,
@@ -48,7 +148,6 @@ function PortfolioGrid() {
     }
   ];
 
-  // Copyright-safe fallback images if Unsplash fails/rate-limited.
   const fallbackImages = [
     "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80",
     "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=400&q=80",
@@ -56,7 +155,6 @@ function PortfolioGrid() {
     "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80"
   ];
 
-  // Categories from portfolio data for filtering
   const categories = ["All", ...Array.from(new Set(demoPortfolios.map(p => p.category)))];
 
   const [images, setImages] = useState(fallbackImages);
@@ -66,7 +164,18 @@ function PortfolioGrid() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalArtworkIdx, setModalArtworkIdx] = useState(null);
 
-  // Fetch Unsplash images just like before
+  // For animation sequencing
+  const [likeAnimKey, setLikeAnimKey] = useState(0);
+
+  // Confetti effect on "like"
+  const [confettiIdx, setConfettiIdx] = useState(null);
+
+  // Tooltip states (card, like btn, filter)
+  const [cardTip, setCardTip] = useState({ idx: null });
+  const [likeTip, setLikeTip] = useState({ idx: null });
+  const [filterTip, setFilterTip] = useState({ cat: null });
+
+  // Fetch Unsplash images as before
   useEffect(() => {
     const unsplashImageUrls = demoPortfolios.map(p =>
       `https://source.unsplash.com/400x300/?${encodeURIComponent(p.query)}`
@@ -85,36 +194,43 @@ function PortfolioGrid() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Like button handler (UI state only)
+  // Like handler: adds like, confetti, spring, a11y update
   function handleLike(idx) {
     setLikes((prev) =>
       prev.map((val, i) => (i === idx ? (liked[idx] ? val - 1 : val + 1) : val))
     );
     setLiked((prev) => prev.map((l, i) => (i === idx ? !l : l)));
+    setLikeAnimKey(k => k + 1);
+    setConfettiIdx(idx);
+    setTimeout(() => setConfettiIdx(null), 610); // Remove confetti
+    // Optionally: use ARIA live region for sr, skipped for brevity
   }
 
-  // Filtering
+  // Filtering as before
   const filteredPortfolios = selectedCategory === "All"
     ? demoPortfolios
     : demoPortfolios.filter(p => p.category === selectedCategory);
 
-  // Modal open/close handlers
+  // Modal open/close handlers, as before
   function openModal(idx) {
     setModalArtworkIdx(idx);
     setModalOpen(true);
   }
   function closeModal(e) {
-    // Close if overlay or close btn is clicked
     if (!e || e.target === e.currentTarget || (e.target && e.target.classList && e.target.classList.contains("ah-modal-close"))) {
       setModalOpen(false);
       setModalArtworkIdx(null);
     }
   }
 
-  // Animated card entry (fade-in/slide-up) with IntersectionObserver
+  // Card animations: stagger/spring-in, respects prefers-reduced-motion
   const [visibleCards, setVisibleCards] = useState(Array(demoPortfolios.length).fill(false));
   useEffect(() => {
-    // intersection animation entry on scroll
+    // intersection animation entry on scroll, with good a11y for reduced-motion
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setVisibleCards(Array(demoPortfolios.length).fill(true));
+      return;
+    }
     const cardEls = document.querySelectorAll(".ah-portfolio-item");
     const cb = (entries, obs) => {
       entries.forEach(entry => {
@@ -129,147 +245,427 @@ function PortfolioGrid() {
         }
       });
     };
-    const io = new window.IntersectionObserver(cb, { threshold: 0.28 });
+    const io = new window.IntersectionObserver(cb, { threshold: 0.2 });
     cardEls.forEach((el, i) => {
       io.observe(el);
-      el.style.animationDelay = (0.04 + i * 0.11) + "s";
+      el.style.animationDelay = (0.04 + i * 0.13) + "s";
+      el.style.setProperty("--spring-idx", i);
     });
     return () => { io.disconnect(); };
   }, [selectedCategory]);
 
-  // Portfolio Card Component (in-file)
-  const PortfolioCard = ({ idx, portfolio }) => (
-    <div
-      className={`ah-portfolio-item${visibleCards[idx] ? " ah-visible" : ""}`}
-      data-idx={idx}
-      key={portfolio.id}
-      tabIndex={0}
-      aria-label={`View more about ${portfolio.artworkTitle} by ${portfolio.artist}`}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        cursor: "pointer",
-        padding: 0,
-        overflow: "hidden",
-        background: "var(--ah-light)",
-        border: liked[idx] ? "3px solid var(--ah-accent)" : "2.5px solid var(--ah-border)",
-        boxShadow: liked[idx]
-          ? "0 3px 20px 0 var(--ah-accent), 0 3px 15px rgba(128,0,0,0.10)"
-          : "0 1px 12px rgba(128,0,0,0.04)",
-        transition: "box-shadow 0.2s,border-color 0.2s"
-      }}
-      onClick={() => openModal(idx)}
-      onKeyPress={(e) => { if (e.key === "Enter") openModal(idx); }}
-    >
+  // Portfolio Card Component: adds confetti, bounce, tooltip, a11y
+  const PortfolioCard = ({ idx, portfolio }) => {
+    // Tooltip state
+    const [cardFocused, setCardFocused] = useState(false);
+
+    // Out-bounce animation hook (spring) for like button when liked
+    const bounce = useSpringBounce(likeAnimKey && liked[idx]);
+
+    return (
       <div
+        className={`ah-portfolio-item${visibleCards[idx] ? " ah-visible" : ""}`}
+        data-idx={idx}
+        key={portfolio.id}
+        tabIndex={0}
+        aria-label={`View more about ${portfolio.artworkTitle} by ${portfolio.artist}`}
         style={{
-          width: "100%",
-          aspectRatio: "4/3",
-          background: "#eee",
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          overflow: "hidden"
+          flexDirection: "column",
+          cursor: "pointer",
+          padding: 0,
+          overflow: "hidden",
+          background: "var(--ah-light)",
+          border: liked[idx] ? "3px solid var(--ah-accent)" : "2.5px solid var(--ah-border)",
+          boxShadow: liked[idx]
+            ? "0 3px 20px 0 var(--ah-accent), 0 3px 15px rgba(128,0,0,0.10)"
+            : "0 1px 12px rgba(128,0,0,0.04)",
+          transition: "box-shadow 0.2s,border-color 0.2s"
         }}
+        onClick={() => openModal(idx)}
+        onKeyPress={(e) => { if (e.key === "Enter") openModal(idx); }}
+        onMouseEnter={() => setCardTip({ idx })}
+        onMouseLeave={() => setCardTip({ idx: null })}
+        onFocus={() => { setCardTip({ idx }); setCardFocused(true); }}
+        onBlur={() => { setCardTip({ idx: null }); setCardFocused(false); }}
+        aria-describedby={cardTip.idx === idx ? "ah-card-tooltip" : undefined}
       >
-        <img
-          src={images[idx] || fallbackImages[idx % fallbackImages.length]}
-          alt={`${portfolio.artworkTitle} by ${portfolio.artist}`}
+        {/* Main image area */}
+        <div
           style={{
             width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            borderTopLeftRadius: "8px",
-            borderTopRightRadius: "8px"
+            aspectRatio: "4/3",
+            background: "#eee",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden"
           }}
-          loading="lazy"
+        >
+          <img
+            src={images[idx] || fallbackImages[idx % fallbackImages.length]}
+            alt={`${portfolio.artworkTitle} by ${portfolio.artist}`}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              borderTopLeftRadius: "8px",
+              borderTopRightRadius: "8px"
+            }}
+            loading="lazy"
+          />
+        </div>
+        <div style={{
+          padding: "13px 16px 10px 16px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "7px",
+          background: "var(--ah-light)",
+        }}>
+          <span style={{
+            fontWeight: 700,
+            fontSize: "1.04em",
+            color: "var(--ah-primary)",
+            minHeight: 24,
+            lineHeight: 1.13
+          }}>{portfolio.artworkTitle}</span>
+          <span style={{
+            fontWeight: 500,
+            fontSize: "0.99em",
+            color: "var(--ah-text-faded)",
+            fontStyle: "italic",
+            minHeight: 21,
+          }}>by {portfolio.artist}</span>
+          <span style={{
+            fontWeight: 400,
+            fontSize: "0.96em",
+            color: "var(--ah-text-main)",
+            marginBottom: 4,
+            opacity: 0.9
+          }}>{portfolio.desc}</span>
+          <div style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 11, justifyContent: "space-between" }}>
+            <span className="ah-category-chip"
+              style={{
+                background: "var(--ah-accent)",
+                color: "var(--ah-primary)",
+                fontSize: "0.91em",
+                borderRadius: "18px",
+                padding: "3px 13px",
+                fontWeight: 600,
+                boxShadow: "0 1px 2px var(--ah-border),0 0.5px 2px #b9847d44"
+              }}>
+              {portfolio.category}
+            </span>
+            {/* Like/confetti/tooltip button */}
+            <span style={{ position: "relative", display: "inline-block" }}>
+              <button
+                type="button"
+                className={`ah-like-btn${liked[idx] ? " liked" : ""}${bounce ? " ah-bounce" : ""}`}
+                aria-label={liked[idx] ? "Unlike artwork" : "Like artwork"}
+                onClick={e => { e.stopPropagation(); handleLike(idx); }}
+                onMouseEnter={() => setLikeTip({ idx })}
+                onMouseLeave={() => setLikeTip({ idx: null })}
+                onFocus={() => setLikeTip({ idx })}
+                onBlur={() => setLikeTip({ idx: null })}
+                tabIndex={0}
+                style={{
+                  background: liked[idx] ? "var(--ah-primary)" : "#fcecc7",
+                  color: liked[idx] ? "var(--ah-accent)" : "var(--ah-primary)",
+                  border: "none",
+                  borderRadius: "18px",
+                  fontSize: "1rem",
+                  fontWeight: 700,
+                  padding: "5px 15px",
+                  minWidth: 60,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  boxShadow: liked[idx]
+                    ? "0 2px 8px 0 var(--ah-border)"
+                    : "0 1.5px 6px 0 #b9847d28",
+                  outline: "none",
+                  transition: "background 0.20s, color 0.20s, box-shadow 0.18s, transform 0.17s",
+                  transform: bounce ? "scale(1.15)" : liked[idx] ? "scale(1.09)" : "scale(1)"
+                }}
+                aria-describedby={likeTip.idx === idx ? "ah-like-tooltip" : undefined}
+              >
+                {liked[idx] ? "♥" : "♡"}
+                <span
+                  style={{
+                    minWidth: 15,
+                    marginLeft: 2,
+                    display: "inline-block",
+                    fontWeight: 600,
+                    transition: "color 0.19s, transform 0.18s",
+                    color: liked[idx] ? "var(--ah-accent)" : "var(--ah-primary)"
+                  }}>
+                  {likes[idx]}
+                </span>
+                {/* Confetti burst (on like) */}
+                {confettiIdx === idx && <ConfettiBurst triggerKey={likeAnimKey} />}
+              </button>
+              {/* Accessible like tooltip */}
+              <Tooltip
+                label={liked[idx] ? "Unlike this artwork" : "Like this artwork"}
+                shown={likeTip.idx === idx}
+              />
+            </span>
+          </div>
+        </div>
+        {/* Custom tooltip on card (top) */}
+        <Tooltip
+          label={`See "${portfolio.artworkTitle}" by ${portfolio.artist}`}
+          shown={cardTip.idx === idx || cardFocused}
         />
       </div>
-      <div style={{
-        padding: "13px 16px 10px 16px",
-        display: "flex",
-        flexDirection: "column",
-        gap: "7px",
-        background: "var(--ah-light)",
-      }}>
-        <span style={{
-          fontWeight: 700,
-          fontSize: "1.04em",
-          color: "var(--ah-primary)",
-          minHeight: 24,
-          lineHeight: 1.13
-        }}>{portfolio.artworkTitle}</span>
-        <span style={{
-          fontWeight: 500,
-          fontSize: "0.99em",
-          color: "var(--ah-text-faded)",
-          fontStyle: "italic",
-          minHeight: 21,
-        }}>by {portfolio.artist}</span>
-        <span style={{
-          fontWeight: 400,
-          fontSize: "0.96em",
-          color: "var(--ah-text-main)",
-          marginBottom: 4,
-          opacity: 0.9
-        }}>{portfolio.desc}</span>
-        <div style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 11, justifyContent: "space-between" }}>
-          <span className="ah-category-chip"
-            style={{
-              background: "var(--ah-accent)",
-              color: "var(--ah-primary)",
-              fontSize: "0.91em",
-              borderRadius: "18px",
-              padding: "3px 13px",
-              fontWeight: 600,
-              boxShadow: "0 1px 2px var(--ah-border),0 0.5px 2px #b9847d44"
-            }}>
-            {portfolio.category}
-          </span>
+    );
+  };
+
+  // Modal for artwork details, adds transition/modal animation
+  const ArtworkModal = ({ portfolioIdx }) => {
+    if (portfolioIdx == null) return null;
+    const portfolio = demoPortfolios[portfolioIdx];
+    // Spring pop-in transition, animated overlay
+    return (
+      <div
+        className="ah-modal-overlay ah-fadein"
+        onClick={closeModal}
+        aria-modal="true"
+        tabIndex={-1}
+        role="dialog"
+        style={{
+          position: "fixed",
+          top: 0, left: 0,
+          width: "100vw",
+          height: "100vh",
+          background: "rgba(58,32,51,0.18)",
+          zIndex: 1001,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+      >
+        <div
+          className="ah-modal-content ah-springpop"
+          style={{
+            background: "var(--ah-secondary)",
+            padding: 0,
+            borderRadius: 14,
+            boxShadow: "0 10px 32px 0 var(--ah-primary), 0 1.5px 18px 0 #dcbb8a99",
+            minWidth: 320,
+            maxWidth: 460,
+            width: "94vw",
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           <button
-            type="button"
-            className={`ah-like-btn${liked[idx] ? " liked" : ""}`}
-            aria-label={liked[idx] ? "Unlike artwork" : "Like artwork"}
-            onClick={e => { e.stopPropagation(); handleLike(idx); }}
-            tabIndex={0}
+            className="ah-modal-close"
+            aria-label="Close artwork details"
+            onClick={closeModal}
             style={{
-              background: liked[idx] ? "var(--ah-primary)" : "#fcecc7",
-              color: liked[idx] ? "var(--ah-accent)" : "var(--ah-primary)",
+              position: "absolute",
+              top: 13,
+              right: 16,
+              background: "var(--ah-dark)",
+              color: "var(--ah-accent)",
               border: "none",
-              borderRadius: "18px",
-              fontSize: "1rem",
-              fontWeight: 700,
-              padding: "5px 15px",
-              minWidth: 60,
+              borderRadius: 10,
+              fontSize: 19,
+              width: 34,
+              height: 34,
               cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              boxShadow: liked[idx]
-                ? "0 2px 8px 0 var(--ah-border)"
-                : "0 1.5px 6px 0 #b9847d28",
-              outline: "none",
-              transition: "background 0.20s, color 0.20s, box-shadow 0.18s, transform 0.17s",
-              transform: liked[idx] ? "scale(1.09)" : "scale(1)"
+              fontWeight: 700,
+              zIndex: 2,
+              opacity: 0.82,
+              boxShadow: "0 3px 8px rgba(128,0,0,0.09)"
             }}
-          >
-            {liked[idx] ? "♥" : "♡"}
-            <span
+          >×</button>
+          <img
+            src={images[portfolioIdx] || fallbackImages[portfolioIdx % fallbackImages.length]}
+            alt={portfolio.artworkTitle}
+            style={{
+              width: "100%",
+              objectFit: "cover",
+              borderTopLeftRadius: 13,
+              borderTopRightRadius: 13,
+              height: 210,
+              background: "#eee"
+            }}
+          />
+          <div style={{
+            padding: "24px 22px 22px 22px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 7
+          }}>
+            <span style={{
+              fontWeight: 800,
+              fontSize: "1.29em",
+              color: "var(--ah-primary)",
+              lineHeight: 1.13
+            }}>{portfolio.artworkTitle}</span>
+            <span style={{
+              fontWeight: 500,
+              fontSize: "1.09em",
+              color: "var(--ah-text-faded)",
+              fontStyle: "italic",
+            }}>by {portfolio.artist}</span>
+            <span style={{
+              fontWeight: 400,
+              fontSize: "1rem",
+              color: "var(--ah-text-main)"
+            }}>{portfolio.desc}</span>
+            <span className="ah-category-chip"
               style={{
-                minWidth: 15,
-                marginLeft: 2,
-                display: "inline-block",
-                fontWeight: 600,
-                transition: "color 0.19s, transform 0.18s",
-                color: liked[idx] ? "var(--ah-accent)" : "var(--ah-primary)"
+                marginTop: 12,
+                background: "var(--ah-accent)",
+                color: "var(--ah-primary)",
+                fontSize: "0.93em",
+                borderRadius: "18px",
+                padding: "4px 13px",
+                fontWeight: 700,
+                boxShadow: "0 1px 2px var(--ah-border),0 1px 4px #b9847d18",
+                width: "fit-content"
               }}>
-              {likes[idx]}
+              Category: {portfolio.category}
             </span>
-          </button>
+            <div style={{ marginTop: 11, display: "flex", gap: 9, alignItems: "center" }}>
+              <button
+                type="button"
+                className={`ah-like-btn${liked[portfolioIdx] ? " liked" : ""}`}
+                aria-label={liked[portfolioIdx] ? "Unlike artwork" : "Like artwork"}
+                onClick={e => { e.stopPropagation(); handleLike(portfolioIdx); }}
+                tabIndex={0}
+                style={{
+                  background: liked[portfolioIdx] ? "var(--ah-primary)" : "#fcecc7",
+                  color: liked[portfolioIdx] ? "var(--ah-accent)" : "var(--ah-primary)",
+                  border: "none",
+                  borderRadius: "18px",
+                  fontSize: "1rem",
+                  fontWeight: 700,
+                  padding: "5px 16px",
+                  minWidth: 60,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  boxShadow: liked[portfolioIdx]
+                    ? "0 2px 8px 0 var(--ah-border)"
+                    : "0 1.5px 6px 0 #b9847d28",
+                  outline: "none",
+                  transition: "background 0.21s, color 0.22s"
+                }}
+              >
+                {liked[portfolioIdx] ? "♥" : "♡"} <span style={{ minWidth: 14, marginLeft: 2 }}>{likes[portfolioIdx]}</span>
+                {confettiIdx === portfolioIdx && <ConfettiBurst triggerKey={likeAnimKey+1000} />}
+              </button>
+              <span style={{
+                fontSize: "0.98em",
+                color: liked[portfolioIdx] ? "var(--ah-primary)" : "#9e665c"
+              }}>{liked[portfolioIdx] ? "You like this" : ""}</span>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    );
+  };
+
+  // ARIA live region (for screen reader update on like/bounce/confetti) [live region at root for accessibility]
+  const [ariaLive, setAriaLive] = useState("");
+  useEffect(() => {
+    // Notify only when likes change, slightly debounced
+    if (likeAnimKey) {
+      setAriaLive("Artwork liked! 🎉");
+      const t = setTimeout(() => setAriaLive(""), 1100);
+      return () => clearTimeout(t);
+    }
+  }, [likeAnimKey]);
+
+  return (
+    <section className="ah-content-section" style={{ zIndex: 1, position: "relative" }}>
+      {/* Accessible ARIA live region */}
+      <div aria-live="polite" style={{
+        position: "absolute", left: "-2000px", width: "1px", height: "1px", overflow: "hidden"
+      }}>{ariaLive}</div>
+      <h2 className="ah-section-title" style={{ marginBottom: 22 }}>
+        Artist Portfolios
+      </h2>
+
+      {/* Category filtering controls with tooltips and accessible a11y */}
+      <div style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 13,
+        marginBottom: 21,
+        marginTop: 8,
+        alignItems: "center"
+      }}>
+        <span style={{ fontWeight: 600, color: "var(--ah-primary)", letterSpacing: "0.4px" }}>
+          Filter:
+        </span>
+        {categories.map((cat) =>
+          <span key={cat} style={{ position: "relative" }}>
+            <button
+              className={`ah-btn${selectedCategory === cat ? " selected" : ""}`}
+              style={{
+                padding: "5px 16px",
+                fontSize: "1.01em",
+                fontWeight: selectedCategory === cat ? 700 : 500,
+                background: selectedCategory === cat ? "var(--ah-accent)" : "var(--ah-secondary)",
+                color: selectedCategory === cat ? "var(--ah-primary)" : "var(--ah-primary)",
+                border: selectedCategory === cat ? "2.5px solid var(--ah-primary)" : "1.5px solid var(--ah-border)",
+                boxShadow: selectedCategory === cat
+                  ? "0 3px 13px 0 #ffd90099,0 0px 14px #ffd70011"
+                  : "0 1px 4px 0 #b9847d12",
+                borderRadius: 16,
+                marginRight: 1,
+                cursor: "pointer",
+                outline: "none",
+                transition: "background 0.18s, color 0.18s, box-shadow 0.13s, transform 0.11s",
+                transform: selectedCategory === cat ? "scale(1.08)" : "scale(1) rotate(-1deg)",
+                zIndex: 3
+              }}
+              onClick={() => setSelectedCategory(cat)}
+              onMouseEnter={() => setFilterTip({ cat })}
+              onMouseLeave={() => setFilterTip({ cat: null })}
+              onFocus={() => setFilterTip({ cat })}
+              onBlur={() => setFilterTip({ cat: null })}
+              tabIndex={0}
+              aria-pressed={selectedCategory === cat}
+            >{cat}</button>
+            <Tooltip
+              label={`Show ${cat === "All" ? "all categories" : `only ${cat}`}`}
+              shown={filterTip.cat === cat}
+            />
+          </span>
+        )}
+      </div>
+
+      {/* Portfolio grid */}
+      <div className="ah-grid-placeholder">
+        {filteredPortfolios.length > 0 ? filteredPortfolios.map((p, idx) => {
+          // Find the original index for likes/images in case of filter
+          const originalIdx = demoPortfolios.findIndex(item => item.id === p.id);
+          return (
+            <PortfolioCard key={p.id} idx={originalIdx} portfolio={p} />
+          );
+        }) : (
+          <div className="ah-portfolio-item ah-placeholder" style={{ minHeight: 120, textAlign: "center", fontStyle: "italic" }}>
+            No artworks found for this category.
+          </div>
+        )}
+      </div>
+
+      {/* Modal for artwork details */}
+      {modalOpen && modalArtworkIdx != null && (
+        <ArtworkModal portfolioIdx={modalArtworkIdx} />
+      )}
+    </section>
   );
+}
 
   // Modal for artwork details. Extra info can be added here.
   const ArtworkModal = ({ portfolioIdx }) => {

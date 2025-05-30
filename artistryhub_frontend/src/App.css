@@ -142,6 +142,8 @@ html {
 .ah-portfolio-item .ah-like-btn {
   transition: background 0.23s, color 0.22s, box-shadow 0.18s, transform 0.17s;
   will-change: transform, background, color;
+  position: relative;
+  overflow: visible;
 }
 .ah-portfolio-item .ah-like-btn:active {
   transform: scale(0.95);
@@ -151,6 +153,33 @@ html {
   background: var(--ah-primary) !important;
   color: var(--ah-accent) !important;
   box-shadow: 0 3px 10px #ffd70040;
+}
+/* Micro-interaction: spring out-bounce effect for like btn (JS-triggered class) */
+.ah-portfolio-item .ah-like-btn.ah-bounce {
+  animation: ahBtnBounce 0.44s cubic-bezier(.43,1.49,.54,1.12);
+}
+@keyframes ahBtnBounce {
+  0% { transform: scale(0.98) rotate(-4deg);}
+  32% { transform: scale(1.16) rotate(-8deg);}
+  74% { transform: scale(1.08) rotate(3deg);}
+  100% { transform: scale(1); }
+}
+
+/* Confetti burst for like */
+.ah-confetti-burst {
+  pointer-events: none;
+  position: absolute;
+  left: 55%;
+  top: 52%;
+  width: 83px;
+  height: 54px;
+  z-index: 44;
+  animation: confettiFade 0.74s cubic-bezier(.49,1.62,.32,.84);
+}
+@keyframes confettiFade {
+  0%   { opacity: 1; filter: none; }
+  70%  { opacity: 0.82; }
+  100% { opacity: 0; filter: blur(2px);}
 }
 
 .ah-portfolio-item.ah-placeholder {
