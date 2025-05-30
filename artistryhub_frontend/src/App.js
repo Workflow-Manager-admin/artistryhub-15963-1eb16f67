@@ -572,7 +572,6 @@ function PortfolioGrid() {
       </div>
     );
   };
-}
 
   // Modal for artwork details. Extra info can be added here.
   const ArtworkModal = ({ portfolioIdx }) => {
