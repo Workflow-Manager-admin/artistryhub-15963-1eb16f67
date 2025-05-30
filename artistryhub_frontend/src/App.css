@@ -242,7 +242,23 @@ html {
     box-shadow: 0 20px 42px #80000040, 0 1.5px 18px #dcbb8a99;
   }
 }
-
+/* Enhanced springy pop for modal */
+.ah-springpop {
+  animation: springPopModal 0.48s cubic-bezier(.48,1.61,.36,1.08);
+}
+@keyframes springPopModal {
+  0%   { opacity:0; transform: scale(0.85) translateY(-55px) rotate(-15deg);}
+  36%  { opacity:0.68; transform: scale(1.07) translateY(13px) rotate(6deg);}
+  59%  { opacity:0.97; transform: scale(1.01) translateY(-4px) rotate(-2.5deg);}
+  100% { opacity:1;   transform: none;}
+}
+.ah-fadein {
+  animation: fadeInOverlay 0.32s cubic-bezier(.49,1.16,.31,.98);
+}
+@keyframes fadeInOverlay {
+  from { opacity: 0; background: rgba(58,32,51,0.03);}
+  to   { opacity: 1; background: rgba(58,32,51,0.18);}
+}
 .ah-modal-content img {
   transition: filter 0.21s, transform 0.22s;
   box-shadow: 0 2px 18px #ffd70042, 0 3px 11px #80000021;
@@ -263,6 +279,48 @@ html {
   box-shadow: 0 2px 13px #ffd70064;
   transform: scale(1.09) rotate(-10deg);
   outline: none;
+}
+
+/* Tooltips: accessible, dynamic, on-brand float/fade */
+.ah-tooltip {
+  position: fixed;
+  padding: 5px 14px;
+  font-size: 0.99em;
+  color: var(--ah-secondary);
+  background: linear-gradient(93deg,var(--ah-primary) 76%,var(--ah-accent));
+  border-radius: 7px;
+  box-shadow: 0 3px 15px #80000029, 0 1.5px 10px #ffd70012;
+  z-index: 999;
+  pointer-events: none;
+  white-space: pre-line;
+  opacity: 0;
+  transition: opacity 0.18s, filter 0.19s;
+  filter: drop-shadow(0 2px 5px rgba(128,0,0,0.04));
+  top: 0;
+  left: 0;
+  margin-top: -54px !important;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+.ah-tooltip[role="tooltip"] {
+  opacity: 1;
+}
+
+/* Reduce motion accessibility: disables most transitions/anim on preference */
+@media (prefers-reduced-motion: reduce) {
+  .ah-portfolio-item,
+  .ah-portfolio-item .ah-like-btn,
+  .ah-confetti-burst,
+  .ah-tooltip,
+  .ah-modal-overlay,
+  .ah-modal-content,
+  .ah-springpop,
+  .ah-fadein {
+    animation: none !important;
+    transition: none !important;
+    filter: none !important;
+  }
 }
 
 /* ... [rest of the file remains unchanged, e.g., .ah-market-grid, .ah-market-card, etc.] ... */
