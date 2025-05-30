@@ -104,6 +104,38 @@ function Profile() {
   );
 }
 
+/**
+ * PUBLIC_INTERFACE
+ * GallerySidebar: Showcases a real-time (mocked) feed of artworks/crafts as a gallery or slider.
+ */
+function GallerySidebar() {
+  // Mock images: use unsplash or placeimg sources (public images, varied art/craft themes)
+  const galleryData = [
+    { src: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=400&q=80", title: "Painted Canvas" },
+    { src: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80", title: "Pottery with Gold" },
+    { src: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80", title: "Bespoke Necklace" },
+    { src: "https://images.unsplash.com/photo-1465101178521-c1a9136a3d18?auto=format&fit=crop&w=400&q=80", title: "Woven Tapestry" },
+    { src: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80", title: "Handmade Mug" },
+  ];
+
+  return (
+    <aside className="ah-sidebar ah-gallery-sidebar">
+      <h3 className="ah-sidebar-title" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={{fontWeight: 700, color: "var(--ah-accent)"}}>Latest Artworks</span>
+        <span style={{fontSize: "1.3em", color: "var(--ah-primary)"}}>🖼️</span>
+      </h3>
+      <div className="ah-gallery-feed">
+        {galleryData.map((img, idx) => (
+          <div className="ah-gallery-img-wrapper" key={idx}>
+            <img className="ah-gallery-img" src={img.src} alt={img.title} loading="lazy" />
+            <div className="ah-gallery-img-caption">{img.title}</div>
+          </div>
+        ))}
+      </div>
+    </aside>
+  );
+}
+
 // PUBLIC_INTERFACE
 function Home() {
   /** Home page with hero, grid, and sidebars */
@@ -124,6 +156,7 @@ function Home() {
         <PortfolioGrid />
       </div>
       <div className="ah-sidebars">
+        <GallerySidebar />
         <StoriesSidebar />
         <CustomOrdersSidebar />
       </div>
