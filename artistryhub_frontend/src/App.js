@@ -111,10 +111,37 @@ function PortfolioGrid() {
     }
   }
 
+  // Animated card entry (fade-in/slide-up) with IntersectionObserver
+  const [visibleCards, setVisibleCards] = useState(Array(demoPortfolios.length).fill(false));
+  useEffect(() => {
+    // intersection animation entry on scroll
+    const cardEls = document.querySelectorAll(".ah-portfolio-item");
+    const cb = (entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const idx = Number(entry.target.dataset.idx);
+          setVisibleCards(v => {
+            const next = v.slice();
+            next[idx] = true;
+            return next;
+          });
+          obs.unobserve(entry.target);
+        }
+      });
+    };
+    const io = new window.IntersectionObserver(cb, { threshold: 0.28 });
+    cardEls.forEach((el, i) => {
+      io.observe(el);
+      el.style.animationDelay = (0.04 + i * 0.11) + "s";
+    });
+    return () => { io.disconnect(); };
+  }, [selectedCategory]);
+
   // Portfolio Card Component (in-file)
   const PortfolioCard = ({ idx, portfolio }) => (
     <div
-      className="ah-portfolio-item"
+      className={`ah-portfolio-item${visibleCards[idx] ? " ah-visible" : ""}`}
+      data-idx={idx}
       key={portfolio.id}
       tabIndex={0}
       aria-label={`View more about ${portfolio.artworkTitle} by ${portfolio.artist}`}
