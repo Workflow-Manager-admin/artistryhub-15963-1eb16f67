@@ -228,7 +228,7 @@ function PortfolioGrid() {
           </span>
           <button
             type="button"
-            className="ah-like-btn"
+            className={`ah-like-btn${liked[idx] ? " liked" : ""}`}
             aria-label={liked[idx] ? "Unlike artwork" : "Like artwork"}
             onClick={e => { e.stopPropagation(); handleLike(idx); }}
             tabIndex={0}
@@ -249,10 +249,22 @@ function PortfolioGrid() {
                 ? "0 2px 8px 0 var(--ah-border)"
                 : "0 1.5px 6px 0 #b9847d28",
               outline: "none",
-              transition: "background 0.20s, color 0.20s"
+              transition: "background 0.20s, color 0.20s, box-shadow 0.18s, transform 0.17s",
+              transform: liked[idx] ? "scale(1.09)" : "scale(1)"
             }}
           >
-            {liked[idx] ? "♥" : "♡"} <span style={{ minWidth: 15, marginLeft: 2 }}>{likes[idx]}</span>
+            {liked[idx] ? "♥" : "♡"}
+            <span
+              style={{
+                minWidth: 15,
+                marginLeft: 2,
+                display: "inline-block",
+                fontWeight: 600,
+                transition: "color 0.19s, transform 0.18s",
+                color: liked[idx] ? "var(--ah-accent)" : "var(--ah-primary)"
+              }}>
+              {likes[idx]}
+            </span>
           </button>
         </div>
       </div>
