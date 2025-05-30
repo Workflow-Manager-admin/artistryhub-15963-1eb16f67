@@ -1016,19 +1016,627 @@ function Messaging() {
   );
 }
 
-// PUBLIC_INTERFACE
+/**
+ * PUBLIC_INTERFACE
+ * ArtistryHub Enhanced Profile Page: visual header (banner + circular avatar), editable display name/bio/socials,
+ * a dynamic user artwork gallery (grid or carousel), badges for achievements/status, elegant layout/animations,
+ * all themed to maroon, gold, and white.
+ */
 function Profile() {
-  /** User profile sample */
+  // Demo: Simulated user state
+  const [displayName, setDisplayName] = useState("Alex Craftmaker");
+  const [editingName, setEditingName] = useState(false);
+
+  const [bio, setBio] = useState(
+    "Mixed media visual artist | Enjoys maroon hues & golden highlights."
+  );
+  const [editingBio, setEditingBio] = useState(false);
+
+  const [social, setSocial] = useState({
+    instagram: "art.alex.c",
+    twitter: "alex_crafts",
+    website: "alexcrafts.com"
+  });
+  const [editingSocial, setEditingSocial] = useState(false);
+
+  // Artworks gallery (user's uploads)
+  const userArtworks = [
+    {
+      title: "Ruby Reflections",
+      url: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=440&q=80"
+    },
+    {
+      title: "Golden Morning Mug",
+      url: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80"
+    },
+    {
+      title: "Graceful Beads",
+      url: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=400&q=80"
+    },
+    {
+      title: "Tapestry Sun",
+      url: "https://images.unsplash.com/photo-1465101178521-c1a9136a3d18?auto=format&fit=crop&w=400&q=80"
+    },
+    {
+      title: "Inspiration Board",
+      url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80"
+    }
+  ];
+
+  // Sample badges (could be from user status/achievements)
+  const badges = [
+    {
+      text: "Founder Artist",
+      color: "var(--ah-accent)",
+      icon: "🌟"
+    },
+    {
+      text: "Trending",
+      color: "#bc752f",
+      icon: "🔥"
+    },
+    {
+      text: "Verified",
+      color: "var(--ah-primary)",
+      icon: "✔️"
+    }
+  ];
+
+  // Editable form handlers
+  const [editInputs, setEditInputs] = useState({
+    displayName: displayName,
+    bio: bio,
+    instagram: social.instagram,
+    twitter: social.twitter,
+    website: social.website
+  });
+
+  const handleEditStart = (field) => {
+    if (field === "name") setEditingName(true);
+    if (field === "bio") setEditingBio(true);
+    if (field === "social") setEditingSocial(true);
+    setEditInputs((inputs) => ({
+      ...inputs,
+      displayName,
+      bio,
+      instagram: social.instagram,
+      twitter: social.twitter,
+      website: social.website
+    }));
+  };
+  const handleEditCancel = (field) => {
+    if (field === "name") setEditingName(false);
+    if (field === "bio") setEditingBio(false);
+    if (field === "social") setEditingSocial(false);
+  };
+  const handleEditSave = (field) => {
+    if (field === "name") {
+      setDisplayName(editInputs.displayName.trim() || displayName);
+      setEditingName(false);
+    }
+    if (field === "bio") {
+      setBio(editInputs.bio.trim() || bio);
+      setEditingBio(false);
+    }
+    if (field === "social") {
+      setSocial({
+        instagram: editInputs.instagram.trim(),
+        twitter: editInputs.twitter.trim(),
+        website: editInputs.website.trim(),
+      });
+      setEditingSocial(false);
+    }
+  };
+
+  // Animation for gallery
+  const [galleryIdx, setGalleryIdx] = useState(0);
+  const galleryLen = userArtworks.length > 0 ? userArtworks.length : 1;
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setGalleryIdx((prev) => (prev + 1) % galleryLen);
+    }, 4100);
+    return () => clearInterval(interval);
+  }, [galleryLen]);
+
   return (
-    <section className="ah-content-section">
-      <h2 className="ah-section-title">My Profile</h2>
-      <div className="ah-profile-placeholder">
-        <div className="ah-profile-avatar"></div>
-        <div className="ah-profile-details">
-          <div className="ah-profile-name">Alex Craftmaker</div>
-          <div className="ah-profile-bio">Mixed media visual artist | Enjoys maroon hues & golden highlights.</div>
+    <section
+      className="ah-content-section"
+      style={{
+        background: "var(--ah-secondary)",
+        boxShadow: "0 3px 28px 0 #80000013, 0 1.5px 10px #ffd70025",
+        padding: 0,
+        overflow: "hidden",
+        borderRadius: 26,
+        margin: "0 auto"
+      }}
+    >
+      {/* Profile header with banner & avatar */}
+      <div
+        style={{
+          width: "100%",
+          minHeight: 163,
+          background: "linear-gradient(95deg, var(--ah-primary) 46%, #ac5151 130%)",
+          borderTopLeftRadius: 26,
+          borderTopRightRadius: 26,
+          position: "relative",
+          display: "flex",
+          alignItems: "flex-end",
+          justifyContent: "start",
+          overflow: "visible",
+        }}
+      >
+        {/* Banner effect */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 1,
+            background:
+              "radial-gradient(circle at 55% 45%, #ffd90011 0%, transparent 86%)",
+            pointerEvents: "none"
+          }}
+        />
+        {/* Animated slightly floating avatar */}
+        <div
+          style={{
+            marginLeft: 48,
+            marginBottom: -52,
+            zIndex: 2,
+            position: "relative",
+          }}
+        >
+          <div
+            style={{
+              boxShadow: "0 7px 25px 0 #ac5151aa, 0 1px 9px var(--ah-accent)",
+              borderRadius: "50%",
+              background: "linear-gradient(150deg,#fff6de 40%, #ffd700cc 150%)",
+              border: "6px solid var(--ah-accent)",
+              padding: 5,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              animation: "profileAvatarFloat 3s ease-in-out infinite alternate",
+              width: 120,
+              height: 120,
+            }}
+          >
+            <img
+              src="https://randomuser.me/api/portraits/men/35.jpg"
+              alt="Profile avatar"
+              style={{
+                width: 100,
+                height: 100,
+                objectFit: "cover",
+                borderRadius: "50%",
+                border: "4px solid var(--ah-secondary)",
+                background: "#fffdfa",
+              }}
+              loading="eager"
+            />
+          </div>
+        </div>
+        {/* Badge row */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: 12,
+            position: "absolute",
+            right: 38,
+            bottom: 19,
+            zIndex: 6
+          }}
+        >
+          {badges.map((b, idx) => (
+            <span
+              key={b.text}
+              className="ah-profile-badge"
+              style={{
+                background: b.color,
+                color: b.color === "var(--ah-primary)" ? "var(--ah-accent)" : "var(--ah-primary)",
+                fontWeight: 700,
+                borderRadius: 12,
+                fontSize: "1.03em",
+                margin: 0,
+                padding: "6px 16px 6px 10px",
+                display: "inline-flex",
+                alignItems: "center",
+                boxShadow: "0 2px 14px #ffd70012,0 0.5px 4px #a1885807",
+                gap: 5,
+                letterSpacing: 0.3,
+                opacity: 0.97,
+                transform: `rotate(${(idx - 1) * 7.5}deg) scale(${1 - 0.03 * idx})`,
+                border: idx === 2 ? "2.4px solid var(--ah-border)" : "none"
+              }}
+              title={b.text}
+            >
+              <span aria-label={b.text}>{b.icon}</span>
+              <span style={{ marginLeft: 3 }}>{b.text}</span>
+            </span>
+          ))}
         </div>
       </div>
+      {/* Profile details: name, bio, edit */}
+      <div
+        style={{
+          marginTop: 65,
+          marginLeft: 46,
+          paddingBottom: 20
+        }}
+      >
+        {/* Editable Display Name */}
+        {!editingName ? (
+          <div
+            className="ah-profile-name"
+            style={{
+              fontSize: "2rem",
+              fontWeight: 900,
+              letterSpacing: 1.2,
+              color: "var(--ah-primary)",
+              display: "flex",
+              alignItems: "center",
+              gap: 13
+            }}
+          >
+            {displayName}
+            <button
+              onClick={() => handleEditStart("name")}
+              className="ah-btn"
+              style={{
+                fontSize: "0.91em",
+                padding: "3.5px 11px",
+                borderRadius: 9,
+                marginLeft: 3,
+                boxShadow: "0 1.2px 6px #ffd70017",
+                background: "var(--ah-accent)",
+                color: "var(--ah-primary)",
+                fontWeight: 600,
+                border: "none",
+                outline: "none",
+                cursor: "pointer"
+              }}
+              aria-label="Edit display name"
+              type="button"
+            >
+              ✏️
+            </button>
+          </div>
+        ) : (
+          <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+            <input
+              value={editInputs.displayName}
+              onChange={e => setEditInputs(inputs => ({ ...inputs, displayName: e.target.value }))}
+              style={{
+                fontSize: "1.6rem",
+                padding: "7px 13px",
+                borderRadius: 7,
+                border: "2.3px solid var(--ah-accent)",
+                fontWeight: 800,
+                color: "var(--ah-primary)",
+                background: "#FFF8DB",
+                fontFamily: "'Georgia',serif"
+              }}
+              autoFocus
+              aria-label="Display name"
+              onKeyDown={e => {
+                if (e.key === "Enter") handleEditSave("name");
+                if (e.key === "Escape") handleEditCancel("name");
+              }}
+              maxLength={32}
+            />
+            <button className="ah-btn" style={{ padding: "2.5px 12px", fontSize: "1em" }} onClick={() => handleEditSave("name")} aria-label="Save name">✔</button>
+            <button className="ah-btn" style={{ padding: "2.5px 11px", fontSize: "1em", background: "#ffe3ae", color: "var(--ah-primary)" }} onClick={() => handleEditCancel("name")} aria-label="Cancel edit">✖</button>
+          </div>
+        )}
+        {/* Editable Bio */}
+        {!editingBio ? (
+          <div
+            className="ah-profile-bio"
+            style={{ margin: "9px 0 6px 1px", fontSize: "1.18rem", color: "#86423a" }}
+          >
+            {bio}
+            <button
+              onClick={() => handleEditStart("bio")}
+              className="ah-btn"
+              style={{
+                fontSize: "0.82em",
+                padding: "1.5px 7px",
+                borderRadius: 8,
+                marginLeft: 10,
+                background: "#ffe3ae",
+                color: "var(--ah-primary)",
+                fontWeight: 500,
+                border: "none",
+                outline: "none",
+                cursor: "pointer"
+              }}
+              aria-label="Edit bio"
+              type="button"
+            >
+              ✏️
+            </button>
+          </div>
+        ) : (
+          <div style={{ display: "flex", alignItems: "center", gap: 9, margin: "4px 0" }}>
+            <input
+              value={editInputs.bio}
+              onChange={e => setEditInputs(inputs => ({ ...inputs, bio: e.target.value }))}
+              style={{
+                fontSize: "1.09rem",
+                padding: "7px 13px",
+                borderRadius: 7,
+                border: "2.3px solid var(--ah-accent)",
+                fontWeight: 600,
+                color: "var(--ah-primary)",
+                background: "#FFF8DB",
+                marginRight: 6
+              }}
+              autoFocus
+              aria-label="Bio"
+              onKeyDown={e => {
+                if (e.key === "Enter") handleEditSave("bio");
+                if (e.key === "Escape") handleEditCancel("bio");
+              }}
+              maxLength={100}
+            />
+            <button className="ah-btn" style={{ padding: "1.5px 11px", fontSize: "0.94em" }} onClick={() => handleEditSave("bio")} aria-label="Save bio">✔</button>
+            <button className="ah-btn" style={{ padding: "1.5px 9px", fontSize: "0.94em", background: "#ffe3ae", color: "var(--ah-primary)" }} onClick={() => handleEditCancel("bio")} aria-label="Cancel edit">✖</button>
+          </div>
+        )}
+        {/* Social Links Editable */}
+        <div style={{ marginTop: 13 }}>
+          {!editingSocial ? (
+            <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+              <span style={{ fontWeight: 700, color: "var(--ah-accent)", marginRight: 2 }}>Socials:</span>
+              <a
+                href={`https://instagram.com/${social.instagram}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#c93273", fontWeight: 600, textDecoration: "none" }}
+              >
+                <span style={{ fontSize: "1.3em" }}>📸</span> @{social.instagram}
+              </a>
+              <a
+                href={`https://twitter.com/${social.twitter}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#1d7ebf", fontWeight: 600, textDecoration: "none" }}
+              >
+                <span style={{ fontSize: "1.23em" }}>🐦</span> @{social.twitter}
+              </a>
+              <a
+                href={
+                  social.website.startsWith("http")
+                    ? social.website
+                    : `https://${social.website}`
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "var(--ah-primary)", fontWeight: 600, textDecoration: "underline" }}
+              >
+                <span style={{ fontSize: "1.17em" }}>🌐</span>{" "}
+                {social.website.replace(/^https?:\/\//i, "")}
+              </a>
+              <button
+                onClick={() => handleEditStart("social")}
+                className="ah-btn"
+                style={{
+                  fontSize: "0.82em",
+                  padding: "2px 9px",
+                  borderRadius: 7,
+                  marginLeft: 9,
+                  background: "var(--ah-accent)",
+                  color: "var(--ah-primary)",
+                  fontWeight: 600,
+                  border: "none",
+                  outline: "none",
+                  cursor: "pointer"
+                }}
+                aria-label="Edit social links"
+                type="button"
+              >
+                ✏️
+              </button>
+            </div>
+          ) : (
+            <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+              <span style={{ fontWeight: 700, color: "var(--ah-accent)", marginRight: 2 }}>Socials:</span>
+              <input
+                value={editInputs.instagram}
+                placeholder="Instagram"
+                aria-label="Instagram"
+                onChange={e => setEditInputs(inputs => ({ ...inputs, instagram: e.target.value }))}
+                style={{
+                  borderRadius: 6,
+                  border: "2px solid var(--ah-accent)",
+                  padding: "3px 7px",
+                  minWidth: 90,
+                  fontSize: "0.96em"
+                }}
+              />
+              <input
+                value={editInputs.twitter}
+                placeholder="Twitter"
+                aria-label="Twitter"
+                onChange={e => setEditInputs(inputs => ({ ...inputs, twitter: e.target.value }))}
+                style={{
+                  borderRadius: 6,
+                  border: "2px solid var(--ah-accent)",
+                  padding: "3px 7px",
+                  minWidth: 90,
+                  fontSize: "0.96em"
+                }}
+              />
+              <input
+                value={editInputs.website}
+                placeholder="Website"
+                aria-label="Website"
+                onChange={e => setEditInputs(inputs => ({ ...inputs, website: e.target.value }))}
+                style={{
+                  borderRadius: 6,
+                  border: "2px solid var(--ah-accent)",
+                  padding: "3px 7px",
+                  minWidth: 90,
+                  fontSize: "0.96em"
+                }}
+              />
+              <button className="ah-btn" style={{ padding: "2.5px 10px", fontSize: "0.94em" }} onClick={() => handleEditSave("social")} aria-label="Save social">✔</button>
+              <button className="ah-btn" style={{ padding: "2.5px 9px", fontSize: "0.94em", background: "#ffe3ae", color: "var(--ah-primary)" }} onClick={() => handleEditCancel("social")} aria-label="Cancel social">✖</button>
+            </div>
+          )}
+        </div>
+      </div>
+      {/* Divider */}
+      <div
+        style={{
+          width: "100%",
+          minHeight: 2,
+          background: "linear-gradient(90deg, #fff8e3 50%, var(--ah-accent) 100%)",
+          opacity: 0.82,
+          margin: "2px 0 22px 0"
+        }}
+      />
+      {/* User Artwork Gallery - grid + carousel + subtle animations */}
+      <div>
+        <h3
+          style={{
+            color: "var(--ah-primary)",
+            fontFamily: "Georgia,serif",
+            fontWeight: 700,
+            fontSize: "1.15rem",
+            marginLeft: 55,
+            marginBottom: 11,
+            marginTop: 3,
+            letterSpacing: "0.3px",
+            display: "flex",
+            alignItems: "center",
+            gap: 7
+          }}
+        >
+          <span role="img" aria-label="Gallery">🎨</span> My Artworks
+        </h3>
+        {/* Carousel for mobile, Grid for desktop */}
+        <div
+          style={{
+            width: "100%",
+            maxWidth: 840,
+            margin: "0 auto",
+            padding: "0 24px 28px 24px"
+          }}
+        >
+          <div
+            className="ah-user-gallery"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(205px, 1fr))",
+              gap: 19,
+              alignItems: "stretch",
+              justifyContent: "center",
+              transition: "all 0.3s",
+              animation: "fadeGalleryIn 0.65s"
+            }}
+          >
+            {userArtworks.map((a, idx) => (
+              <div
+                key={a.title}
+                className="ah-user-gallery-imgwrap"
+                style={{
+                  background: "linear-gradient(103deg,#fffbe9 65%,#ffd90022 130%)",
+                  borderRadius: 13,
+                  boxShadow: "0 2px 13px 0 #ac515115, 0 0.5px 4px #ffd70008",
+                  padding: "7px 7px 10px 7px",
+                  border: "2.5px solid var(--ah-border)",
+                  position: "relative",
+                  minHeight: 160,
+                  transition: "box-shadow 0.18s,border-color 0.16s",
+                  cursor: "pointer",
+                  overflow: "hidden",
+                  transform: galleryIdx === idx ? "scale(1.026)" : "scale(1)"
+                }}
+                title={a.title}
+              >
+                <img
+                  src={a.url}
+                  alt={a.title}
+                  style={{
+                    width: "100%",
+                    minHeight: 119,
+                    aspectRatio: "4/3",
+                    objectFit: "cover",
+                    borderRadius: 10,
+                    border: galleryIdx === idx ? "2.7px solid var(--ah-accent)" : "2.1px solid var(--ah-primary)",
+                    boxShadow: galleryIdx === idx
+                      ? "0 5px 20px #ffd70055"
+                      : "0 2px 11px #ac515135",
+                    transition: "border 0.18s, box-shadow 0.19s"
+                  }}
+                  className={galleryIdx === idx ? "gallery-img-highlight" : ""}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: 7,
+                    left: 7,
+                    right: 7,
+                    color: "var(--ah-primary)",
+                    background: "rgba(255,245,210,0.91)",
+                    fontWeight: 700,
+                    fontSize: "1.01em",
+                    textAlign: "center",
+                    borderRadius: 5,
+                    padding: "3px 0",
+                    boxShadow: "0 1px 5px rgba(128,0,0,0.07)"
+                  }}
+                >
+                  {a.title}
+                </div>
+                {/* Carousel marker */}
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: 6,
+                    right: 8,
+                    zIndex: 2,
+                    fontSize: "0.93em",
+                    color: "#b9847d"
+                  }}>
+                  {idx + 1} / {userArtworks.length}
+                </div>
+                {/* Subtle bounce animation effect */}
+                {galleryIdx === idx && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      boxShadow: "0 7px 24px #ffd90030",
+                      borderRadius: 13,
+                      pointerEvents: "none",
+                      animation: "galleryBounceGlow 1.3s 1"
+                    }}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      {/* Custom subtle animation keyframes (injected in style tag for demonstration, ideally in CSS) */}
+      <style>{`
+        @keyframes profileAvatarFloat {
+          0% { transform:translateY(0) scale(1) rotate(-4deg);}
+          70% { transform:translateY(-9px) scale(1.02) rotate(2deg);}
+          100% { transform:translateY(-5px) scale(1.02);}
+        }
+        @keyframes fadeGalleryIn {
+          from { opacity: 0; filter: blur(8px) translateY(47px);}
+          to { opacity: 1; filter: blur(0) translateY(0);}
+        }
+        @keyframes galleryBounceGlow {
+          0% { box-shadow: 0 7px 24px #ffd90002;}
+          29% { box-shadow: 0 7px 24px #ffd70080;}
+          100% { box-shadow: 0 7px 24px #ffd90002;}
+        }
+      `}</style>
     </section>
   );
 }
