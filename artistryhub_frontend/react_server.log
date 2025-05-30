@@ -21,3 +21,27 @@ webpack compiled successfully
 Compiling...
 Compiled successfully!
 webpack compiled successfully
+Compiling...
+Failed to compile.
+
+Module not found: Error: Can't resolve 'react-router-dom' in '/home/kavia/workspace/code-generation/artistryhub-15963-1eb16f67/artistryhub_frontend/src'
+ERROR in ./src/App.js 5:0-93
+Module not found: Error: Can't resolve 'react-router-dom' in '/home/kavia/workspace/code-generation/artistryhub-15963-1eb16f67/artistryhub_frontend/src'
+
+webpack compiled with 1 error
+Compiling...
+Failed to compile.
+
+Module not found: Error: Can't resolve 'react-router-dom' in '/home/kavia/workspace/code-generation/artistryhub-15963-1eb16f67/artistryhub_frontend/src'
+ERROR in ./src/App.js 5:0-93
+Module not found: Error: Can't resolve 'react-router-dom' in '/home/kavia/workspace/code-generation/artistryhub-15963-1eb16f67/artistryhub_frontend/src'
+
+webpack compiled with 1 error
+Compiling...
+Failed to compile.
+
+Module not found: Error: Can't resolve 'react-router-dom' in '/home/kavia/workspace/code-generation/artistryhub-15963-1eb16f67/artistryhub_frontend/src'
+ERROR in ./src/App.js 5:0-93
+Module not found: Error: Can't resolve 'react-router-dom' in '/home/kavia/workspace/code-generation/artistryhub-15963-1eb16f67/artistryhub_frontend/src'
+
+webpack compiled with 1 error
