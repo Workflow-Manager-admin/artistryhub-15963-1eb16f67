@@ -441,7 +441,7 @@ function PortfolioGrid() {
         {categories.map((cat) =>
           <button
             key={cat}
-            className="ah-btn"
+            className={`ah-btn${selectedCategory === cat ? " selected" : ""}`}
             style={{
               padding: "5px 16px",
               fontSize: "1.01em",
@@ -450,13 +450,15 @@ function PortfolioGrid() {
               color: selectedCategory === cat ? "var(--ah-primary)" : "var(--ah-primary)",
               border: selectedCategory === cat ? "2.5px solid var(--ah-primary)" : "1.5px solid var(--ah-border)",
               boxShadow: selectedCategory === cat
-                ? "0 3px 13px 0 #b9847d22"
+                ? "0 3px 13px 0 #ffd90099,0 0px 14px #ffd70011"
                 : "0 1px 4px 0 #b9847d12",
               borderRadius: 16,
               marginRight: 1,
               cursor: "pointer",
               outline: "none",
-              transition: "background 0.16s, color 0.16s"
+              transition: "background 0.18s, color 0.18s, box-shadow 0.13s, transform 0.11s",
+              transform: selectedCategory === cat ? "scale(1.08)" : "scale(1) rotate(-1deg)",
+              zIndex: 3
             }}
             onClick={() => setSelectedCategory(cat)}
             tabIndex={0}
