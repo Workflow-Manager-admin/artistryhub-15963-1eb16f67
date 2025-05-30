@@ -2,135 +2,449 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, NavLink, Navigate } from "react-router-dom";
 import "./App.css";
 
-// PUBLIC_INTERFACE
+/**
+ * PUBLIC_INTERFACE
+ * Enhanced: PortfolioGrid displays cards with artist/artwork metadata, a like button, category filtering,
+ * and a modal for details. The UI is brand-consistent and interactive.
+ */
 function PortfolioGrid() {
-  /**
-   * Portfolio grid showcasing sample artists and works.
-   * Attempts to fetch artwork images from Unsplash demo endpoint, else uses realistic art placeholders.
-   */
+  // Mocked portfolio data for demo
   const demoPortfolios = [
     {
-      name: "Emily Rivera",
-      desc: "Handpainted Ceramics",
-      query: "ceramics pottery"
+      id: 1,
+      artist: "Emily Rivera",
+      artworkTitle: "Golden Tide Vase",
+      desc: "Handpainted ceramics, blending tradition and sunlight. Organic textures with gold accents.",
+      category: "Ceramics",
+      query: "ceramics pottery",
+      likes: 17,
     },
     {
-      name: "Art by Quentin",
-      desc: "Abstract Canvas",
-      query: "abstract art"
+      id: 2,
+      artist: "Art by Quentin",
+      artworkTitle: "Maroon Mirage",
+      desc: "Bold abstract canvas in rich maroon and gold, capturing movement and emotion.",
+      category: "Painting",
+      query: "abstract art",
+      likes: 8,
     },
     {
-      name: "Sunlit Weaves",
-      desc: "Textile & Fiber Arts",
-      query: "textile fiber art"
+      id: 3,
+      artist: "Sunlit Weaves",
+      artworkTitle: "Harvest Shawl",
+      desc: "Handwoven textile, fibers dyed with nature. A tactile, wearable tapestry.",
+      category: "Textiles",
+      query: "textile fiber art",
+      likes: 12,
     },
     {
-      name: "Rosa Goldsmith",
-      desc: "Jewelry & Beadwork",
-      query: "artisan jewelry"
+      id: 4,
+      artist: "Rosa Goldsmith",
+      artworkTitle: "Starlit Beads",
+      desc: "Jewelry inspired by night skies—delicate beadwork with gold threading.",
+      category: "Jewelry",
+      query: "artisan jewelry",
+      likes: 4,
     }
   ];
 
+  // Copyright-safe fallback images if Unsplash fails/rate-limited.
   const fallbackImages = [
-    // These are copyright-safe, realistic Unsplash images to use if fetch fails or rate limited.
     "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80",
     "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=400&q=80",
     "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
     "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80"
   ];
 
+  // Categories from portfolio data for filtering
+  const categories = ["All", ...Array.from(new Set(demoPortfolios.map(p => p.category)))];
+
   const [images, setImages] = useState(fallbackImages);
+  const [likes, setLikes] = useState(() => demoPortfolios.map(p => p.likes));
+  const [liked, setLiked] = useState(() => demoPortfolios.map(() => false));
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalArtworkIdx, setModalArtworkIdx] = useState(null);
 
+  // Fetch Unsplash images just like before
   useEffect(() => {
-    // Fetch images from Unsplash Source API (does not require an API key)
-    // This approach is suitable for demo/prototyping, using the free source endpoint
-    // See: https://source.unsplash.com/
-    // Results will vary per refresh, but always real & current images.
-
-    // Map each portfolio's query to a unique source.unslash.com image URL
-    const unsplashImageUrls = demoPortfolios.map((p, idx) =>
+    const unsplashImageUrls = demoPortfolios.map(p =>
       `https://source.unsplash.com/400x300/?${encodeURIComponent(p.query)}`
     );
-
-    // Try prefetching all images; fallback instantly to the default set if error.
     Promise.all(
       unsplashImageUrls.map(
-        (url) =>
+        (url, idx) =>
           new Promise((resolve) => {
-            // Preload image to detect broken or throttled URLs
             const img = new window.Image();
             img.onload = () => resolve(url);
-            img.onerror = () => resolve(fallbackImages[Math.floor(Math.random()*fallbackImages.length)]);
+            img.onerror = () => resolve(fallbackImages[idx % fallbackImages.length]);
             img.src = url;
           })
       )
     ).then((results) => setImages(results));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <section className="ah-content-section">
-      <h2 className="ah-section-title">Artist Portfolios</h2>
-      <div className="ah-grid-placeholder">
-        {demoPortfolios.map((p, idx) => (
-          <div
-            className="ah-portfolio-item"
-            key={p.name}
+  // Like button handler (UI state only)
+  function handleLike(idx) {
+    setLikes((prev) =>
+      prev.map((val, i) => (i === idx ? (liked[idx] ? val - 1 : val + 1) : val))
+    );
+    setLiked((prev) => prev.map((l, i) => (i === idx ? !l : l)));
+  }
+
+  // Filtering
+  const filteredPortfolios = selectedCategory === "All"
+    ? demoPortfolios
+    : demoPortfolios.filter(p => p.category === selectedCategory);
+
+  // Modal open/close handlers
+  function openModal(idx) {
+    setModalArtworkIdx(idx);
+    setModalOpen(true);
+  }
+  function closeModal(e) {
+    // Close if overlay or close btn is clicked
+    if (!e || e.target === e.currentTarget || (e.target && e.target.classList && e.target.classList.contains("ah-modal-close"))) {
+      setModalOpen(false);
+      setModalArtworkIdx(null);
+    }
+  }
+
+  // Portfolio Card Component (in-file)
+  const PortfolioCard = ({ idx, portfolio }) => (
+    <div
+      className="ah-portfolio-item"
+      key={portfolio.id}
+      tabIndex={0}
+      aria-label={`View more about ${portfolio.artworkTitle} by ${portfolio.artist}`}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        cursor: "pointer",
+        padding: 0,
+        overflow: "hidden",
+        background: "var(--ah-light)",
+        border: liked[idx] ? "3px solid var(--ah-accent)" : "2.5px solid var(--ah-border)",
+        boxShadow: liked[idx]
+          ? "0 3px 20px 0 var(--ah-accent), 0 3px 15px rgba(128,0,0,0.10)"
+          : "0 1px 12px rgba(128,0,0,0.04)",
+        transition: "box-shadow 0.2s,border-color 0.2s"
+      }}
+      onClick={() => openModal(idx)}
+      onKeyPress={(e) => { if (e.key === "Enter") openModal(idx); }}
+    >
+      <div
+        style={{
+          width: "100%",
+          aspectRatio: "4/3",
+          background: "#eee",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "hidden"
+        }}
+      >
+        <img
+          src={images[idx] || fallbackImages[idx % fallbackImages.length]}
+          alt={`${portfolio.artworkTitle} by ${portfolio.artist}`}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            borderTopLeftRadius: "8px",
+            borderTopRightRadius: "8px"
+          }}
+          loading="lazy"
+        />
+      </div>
+      <div style={{
+        padding: "13px 16px 10px 16px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "7px",
+        background: "var(--ah-light)",
+      }}>
+        <span style={{
+          fontWeight: 700,
+          fontSize: "1.04em",
+          color: "var(--ah-primary)",
+          minHeight: 24,
+          lineHeight: 1.13
+        }}>{portfolio.artworkTitle}</span>
+        <span style={{
+          fontWeight: 500,
+          fontSize: "0.99em",
+          color: "var(--ah-text-faded)",
+          fontStyle: "italic",
+          minHeight: 21,
+        }}>by {portfolio.artist}</span>
+        <span style={{
+          fontWeight: 400,
+          fontSize: "0.96em",
+          color: "var(--ah-text-main)",
+          marginBottom: 4,
+          opacity: 0.9
+        }}>{portfolio.desc}</span>
+        <div style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 11, justifyContent: "space-between" }}>
+          <span className="ah-category-chip"
             style={{
+              background: "var(--ah-accent)",
+              color: "var(--ah-primary)",
+              fontSize: "0.91em",
+              borderRadius: "18px",
+              padding: "3px 13px",
+              fontWeight: 600,
+              boxShadow: "0 1px 2px var(--ah-border),0 0.5px 2px #b9847d44"
+            }}>
+            {portfolio.category}
+          </span>
+          <button
+            type="button"
+            className="ah-like-btn"
+            aria-label={liked[idx] ? "Unlike artwork" : "Like artwork"}
+            onClick={e => { e.stopPropagation(); handleLike(idx); }}
+            tabIndex={0}
+            style={{
+              background: liked[idx] ? "var(--ah-primary)" : "#fcecc7",
+              color: liked[idx] ? "var(--ah-accent)" : "var(--ah-primary)",
+              border: "none",
+              borderRadius: "18px",
+              fontSize: "1rem",
+              fontWeight: 700,
+              padding: "5px 15px",
+              minWidth: 60,
+              cursor: "pointer",
               display: "flex",
-              flexDirection: "column",
-              padding: 0,
-              overflow: "hidden",
-              background: "var(--ah-light)",
-              border: "2.5px solid var(--ah-border)",
-              boxShadow: "0 1px 12px rgba(128,0,0,0.04)"
+              alignItems: "center",
+              gap: 8,
+              boxShadow: liked[idx]
+                ? "0 2px 8px 0 var(--ah-border)"
+                : "0 1.5px 6px 0 #b9847d28",
+              outline: "none",
+              transition: "background 0.20s, color 0.20s"
             }}
           >
-            <div
+            {liked[idx] ? "♥" : "♡"} <span style={{ minWidth: 15, marginLeft: 2 }}>{likes[idx]}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Modal for artwork details. Extra info can be added here.
+  const ArtworkModal = ({ portfolioIdx }) => {
+    if (portfolioIdx == null) return null;
+    const portfolio = demoPortfolios[portfolioIdx];
+    return (
+      <div
+        className="ah-modal-overlay"
+        onClick={closeModal}
+        aria-modal="true"
+        tabIndex={-1}
+        role="dialog"
+        style={{
+          position: "fixed",
+          top: 0, left: 0,
+          width: "100vw",
+          height: "100vh",
+          background: "rgba(58,32,51,0.18)",
+          zIndex: 1001,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+      >
+        <div
+          className="ah-modal-content"
+          style={{
+            background: "var(--ah-secondary)",
+            padding: 0,
+            borderRadius: 14,
+            boxShadow: "0 10px 32px 0 var(--ah-primary), 0 1.5px 18px 0 #dcbb8a99",
+            minWidth: 320,
+            maxWidth: 460,
+            width: "94vw",
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <button
+            className="ah-modal-close"
+            aria-label="Close artwork details"
+            onClick={closeModal}
+            style={{
+              position: "absolute",
+              top: 13,
+              right: 16,
+              background: "var(--ah-dark)",
+              color: "var(--ah-accent)",
+              border: "none",
+              borderRadius: 10,
+              fontSize: 19,
+              width: 34,
+              height: 34,
+              cursor: "pointer",
+              fontWeight: 700,
+              zIndex: 2,
+              opacity: 0.82,
+              boxShadow: "0 3px 8px rgba(128,0,0,0.09)"
+            }}
+          >×</button>
+          <img
+            src={images[portfolioIdx] || fallbackImages[portfolioIdx % fallbackImages.length]}
+            alt={portfolio.artworkTitle}
+            style={{
+              width: "100%",
+              objectFit: "cover",
+              borderTopLeftRadius: 13,
+              borderTopRightRadius: 13,
+              height: 210,
+              background: "#eee"
+            }}
+          />
+          <div style={{
+            padding: "24px 22px 22px 22px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 7
+          }}>
+            <span style={{
+              fontWeight: 800,
+              fontSize: "1.29em",
+              color: "var(--ah-primary)",
+              lineHeight: 1.13
+            }}>{portfolio.artworkTitle}</span>
+            <span style={{
+              fontWeight: 500,
+              fontSize: "1.09em",
+              color: "var(--ah-text-faded)",
+              fontStyle: "italic",
+            }}>by {portfolio.artist}</span>
+            <span style={{
+              fontWeight: 400,
+              fontSize: "1rem",
+              color: "var(--ah-text-main)"
+            }}>{portfolio.desc}</span>
+            <span className="ah-category-chip"
               style={{
-                width: "100%",
-                aspectRatio: "4/3",
-                background: "#eee",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                overflow: "hidden"
-              }}
-            >
-              <img
-                src={images[idx] || fallbackImages[idx % fallbackImages.length]}
-                alt={`${p.desc} by ${p.name}`}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  borderTopLeftRadius: "8px",
-                  borderTopRightRadius: "8px"
-                }}
-                loading="lazy"
-              />
-            </div>
-            <div style={{
-              padding: "13px 16px 8px 16px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "3px"
-            }}>
-              <span style={{
+                marginTop: 12,
+                background: "var(--ah-accent)",
+                color: "var(--ah-primary)",
+                fontSize: "0.93em",
+                borderRadius: "18px",
+                padding: "4px 13px",
                 fontWeight: 700,
-                fontSize: "1.09em",
-                color: "var(--ah-primary)"
-              }}>{p.name}</span>
+                boxShadow: "0 1px 2px var(--ah-border),0 1px 4px #b9847d18",
+                width: "fit-content"
+              }}>
+              Category: {portfolio.category}
+            </span>
+            <div style={{ marginTop: 11, display: "flex", gap: 9, alignItems: "center" }}>
+              <button
+                type="button"
+                className="ah-like-btn"
+                aria-label={liked[portfolioIdx] ? "Unlike artwork" : "Like artwork"}
+                onClick={e => { e.stopPropagation(); handleLike(portfolioIdx); }}
+                tabIndex={0}
+                style={{
+                  background: liked[portfolioIdx] ? "var(--ah-primary)" : "#fcecc7",
+                  color: liked[portfolioIdx] ? "var(--ah-accent)" : "var(--ah-primary)",
+                  border: "none",
+                  borderRadius: "18px",
+                  fontSize: "1rem",
+                  fontWeight: 700,
+                  padding: "5px 16px",
+                  minWidth: 60,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  boxShadow: liked[portfolioIdx]
+                    ? "0 2px 8px 0 var(--ah-border)"
+                    : "0 1.5px 6px 0 #b9847d28",
+                  outline: "none",
+                  transition: "background 0.21s, color 0.22s"
+                }}
+              >
+                {liked[portfolioIdx] ? "♥" : "♡"} <span style={{ minWidth: 14, marginLeft: 2 }}>{likes[portfolioIdx]}</span>
+              </button>
               <span style={{
-                fontWeight: 400,
-                fontSize: "0.97em",
-                color: "var(--ah-text-faded)",
-                fontStyle: "italic"
-              }}>{p.desc}</span>
+                fontSize: "0.98em",
+                color: liked[portfolioIdx] ? "var(--ah-primary)" : "#9e665c"
+              }}>{liked[portfolioIdx] ? "You like this" : ""}</span>
             </div>
           </div>
-        ))}
+        </div>
       </div>
+    );
+  };
+
+  return (
+    <section className="ah-content-section" style={{ zIndex: 1 }}>
+      <h2 className="ah-section-title" style={{ marginBottom: 22 }}>
+        Artist Portfolios
+      </h2>
+
+      {/* Category filtering controls */}
+      <div style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 13,
+        marginBottom: 21,
+        marginTop: 8,
+        alignItems: "center"
+      }}>
+        <span style={{ fontWeight: 600, color: "var(--ah-primary)", letterSpacing: "0.4px" }}>
+          Filter:
+        </span>
+        {categories.map((cat) =>
+          <button
+            key={cat}
+            className="ah-btn"
+            style={{
+              padding: "5px 16px",
+              fontSize: "1.01em",
+              fontWeight: selectedCategory === cat ? 700 : 500,
+              background: selectedCategory === cat ? "var(--ah-accent)" : "var(--ah-secondary)",
+              color: selectedCategory === cat ? "var(--ah-primary)" : "var(--ah-primary)",
+              border: selectedCategory === cat ? "2.5px solid var(--ah-primary)" : "1.5px solid var(--ah-border)",
+              boxShadow: selectedCategory === cat
+                ? "0 3px 13px 0 #b9847d22"
+                : "0 1px 4px 0 #b9847d12",
+              borderRadius: 16,
+              marginRight: 1,
+              cursor: "pointer",
+              outline: "none",
+              transition: "background 0.16s, color 0.16s"
+            }}
+            onClick={() => setSelectedCategory(cat)}
+            tabIndex={0}
+            aria-pressed={selectedCategory === cat}
+          >{cat}</button>
+        )}
+      </div>
+
+      {/* Portfolio grid */}
+      <div className="ah-grid-placeholder">
+        {filteredPortfolios.length > 0 ? filteredPortfolios.map((p, idx) => {
+          // Find the original index for likes/images in case of filter
+          const originalIdx = demoPortfolios.findIndex(item => item.id === p.id);
+          return (
+            <PortfolioCard key={p.id} idx={originalIdx} portfolio={p} />
+          );
+        }) : (
+          <div className="ah-portfolio-item ah-placeholder" style={{ minHeight: 120, textAlign: "center", fontStyle: "italic" }}>
+            No artworks found for this category.
+          </div>
+        )}
+      </div>
+
+      {/* Modal for artwork details */}
+      {modalOpen && modalArtworkIdx != null && (
+        <ArtworkModal portfolioIdx={modalArtworkIdx} />
+      )}
     </section>
   );
 }
