@@ -449,17 +449,256 @@ function PortfolioGrid() {
   );
 }
 
-// PUBLIC_INTERFACE
+/**
+ * PUBLIC_INTERFACE
+ * Enhanced Marketplace: elegant product/artwork cards, badges, price and artist info, on-brand theme.
+ */
 function Marketplace() {
-  /** Marketplace feature for trending and available crafts */
+  // Product data for marketplace cards
+  const products = [
+    {
+      id: 1,
+      title: "Golden Tides – Ceramic Mug",
+      desc: "Hand-thrown porcelain, gold luster rim. Each mug a sunrise scene.",
+      artist: "Emily Rivera",
+      price: 32,
+      featured: true,
+      isNew: false,
+      image:
+        "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=440&q=80",
+      category: "Ceramics",
+    },
+    {
+      id: 2,
+      title: "Crimson Knot – Handwoven Scarf",
+      desc: "Luxurious alpaca yarn with maroon-&-gold pattern. Limited edition.",
+      artist: "Sunlit Weaves",
+      price: 58,
+      featured: false,
+      isNew: true,
+      image:
+        "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=440&q=80",
+      category: "Textiles",
+    },
+    {
+      id: 3,
+      title: "Starlit Path Necklace",
+      desc:
+        "Dainty beadwork with gold threading, inspired by golden constellations.",
+      artist: "Rosa Goldsmith",
+      price: 44,
+      featured: true,
+      isNew: true,
+      image:
+        "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=440&q=80",
+      category: "Jewelry",
+    },
+    {
+      id: 4,
+      title: "Custom Monogram Canvas",
+      desc:
+        "Your name or initials in a swirling maroon & gold abstract background.",
+      artist: "Art by Quentin",
+      price: 80,
+      featured: false,
+      isNew: false,
+      image:
+        "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=440&q=80",
+      category: "Painting",
+    },
+  ];
+
+  // Badge SVGs
+  const featuredBadge = (
+    <span
+      style={{
+        background:
+          "linear-gradient(90deg, var(--ah-accent) 80%, #fffbe7 120%)",
+        color: "var(--ah-primary)",
+        fontWeight: 700,
+        borderRadius: "8px",
+        fontSize: "0.87em",
+        letterSpacing: 0.5,
+        padding: "3px 10px 3px 7px",
+        marginRight: 7,
+        marginBottom: 4,
+        marginTop: 4,
+        boxShadow: "0 0 10px #ffd90044, 0 2px 5px #80000022",
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 3,
+      }}
+      title="Featured artwork"
+    >
+      <span role="img" aria-label="star">
+        ⭐
+      </span>
+      Featured
+    </span>
+  );
+  const newBadge = (
+    <span
+      style={{
+        background:
+          "linear-gradient(90deg, #fffee7 78%, var(--ah-accent) 130%)",
+        color: "var(--ah-primary)",
+        fontWeight: 600,
+        borderRadius: "8px",
+        fontSize: "0.83em",
+        letterSpacing: 0.2,
+        padding: "3px 10px 3px 9px",
+        marginLeft: 2,
+        marginTop: 3,
+        marginBottom: 5,
+        boxShadow: "0 0 10px #ffd90033, 0 2px 5px #80000014",
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 3,
+      }}
+      title="Recently added"
+    >
+      <span role="img" aria-label="new">
+        🆕
+      </span>
+      New
+    </span>
+  );
+
+  // Product Card component
+  function ProductCard({ product }) {
+    return (
+      <div
+        className="ah-market-card"
+        tabIndex={0}
+        aria-label={`Artwork: ${product.title}`}
+      >
+        {/* Badges Row */}
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 6, minHeight: 29 }}>
+          {product.featured && featuredBadge}
+          {product.isNew && newBadge}
+        </div>
+        {/* Main Image */}
+        <div
+          style={{
+            width: "100%",
+            aspectRatio: "4/3",
+            background: "#fff5d3",
+            borderRadius: "9px 9px 0 0",
+            overflow: "hidden",
+            marginBottom: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          <img
+            src={product.image}
+            alt={product.title}
+            loading="lazy"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              borderTopLeftRadius: 9,
+              borderTopRightRadius: 9,
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0
+            }}
+          />
+        </div>
+        <div style={{ padding: "14px 13px 11px 13px", display: "flex", flexDirection: "column", gap: "4px", position: "relative", background: "none" }}>
+          <span style={{
+            fontWeight: 700,
+            fontSize: "1.07em",
+            color: "var(--ah-primary)",
+            minHeight: 26,
+            lineHeight: 1.12,
+            fontFamily: "Georgia, serif",
+            marginBottom: 2
+          }}>
+            {product.title}
+          </span>
+          <span style={{
+            fontWeight: 400,
+            fontSize: "0.97em",
+            color: "var(--ah-text-main)",
+            opacity: 0.90,
+            minHeight: 20,
+            marginBottom: 2
+          }}>
+            {product.desc}
+          </span>
+          <div style={{
+            display: "flex",
+            gap: 10,
+            marginTop: 6,
+            alignItems: "center"
+          }}>
+            <span
+              style={{
+                background: "var(--ah-accent)",
+                color: "var(--ah-primary)",
+                borderRadius: "15px",
+                padding: "3.5px 10px",
+                fontSize: "0.92em",
+                fontWeight: 600,
+                boxShadow: "0 1px 3px var(--ah-border)"
+              }}
+            >
+              {product.category}
+            </span>
+            <span style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+              color: "var(--ah-text-faded)",
+              fontStyle: "italic",
+              fontWeight: 500,
+              fontSize: "0.97em"
+            }}>
+              <span role="img" aria-label="artist">👤</span>
+              {product.artist}
+            </span>
+          </div>
+          <span style={{
+            marginTop: 10,
+            color: "var(--ah-primary)",
+            fontWeight: 700,
+            fontSize: "1.09em",
+            display: "flex",
+            alignItems: "center",
+            gap: 6
+          }}>
+            <span style={{
+              color: "var(--ah-accent)",
+              fontWeight: 900,
+              fontSize: "1.11em"
+            }}>
+              ${product.price}
+            </span>
+            <span style={{
+              fontWeight: 400,
+              color: "#9d7369",
+              fontSize: "0.88em"
+            }}>
+              {/* Price label */}
+              {product.price < 40 ? "Great Value" : product.price > 65 ? "Premium Art" : "Limited Edition"}
+            </span>
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <section className="ah-content-section">
-      <h2 className="ah-section-title">Marketplace</h2>
-      <div className="ah-marketplace-placeholder">
-        <div className="ah-market-item">"Golden Tides" – Ceramic Mug</div>
-        <div className="ah-market-item">Crimson Knot – Handwoven Scarf</div>
-        <div className="ah-market-item">"Starlit Path" Necklace</div>
-        <div className="ah-market-item">Custom Monogram Canvas</div>
+    <section className="ah-content-section" style={{ background: "var(--ah-secondary)", boxShadow: "0 3px 21px 0 #80000009, 0 1px 10px #FFD70022" }}>
+      <h2 className="ah-section-title" style={{ color: "var(--ah-primary)", marginBottom: 22 }}>
+        Marketplace
+      </h2>
+      <div className="ah-market-grid">
+        {products.map(product =>
+          <ProductCard product={product} key={product.id} />
+        )}
       </div>
     </section>
   );
