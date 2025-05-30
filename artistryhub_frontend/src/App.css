@@ -1,9 +1,22 @@
+/* ArtistryHub Design System: Maroon, White, Gold */
 :root {
-  --kavia-orange: #E87A41;
-  --kavia-dark: #1A1A1A;
-  --text-color: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --border-color: rgba(255, 255, 255, 0.1);
+  /* Brand Colors */
+  --ah-primary: #800000;
+  --ah-secondary: #FFFFFF;
+  --ah-accent: #FFD700;
+  --ah-dark: #3a2033;
+  --ah-light: #f7f3f1;
+  /* Text */
+  --ah-text-main: #3a2033;
+  --ah-text-header: #800000;
+  --ah-text-accent: #FFD700;
+  --ah-text-light: #FFFFFF;
+  --ah-text-faded: #b9847d;
+  /* Borders/Lines */
+  --ah-border: #dcbb8a;
+  /* Spacing */
+  --ah-gap: 24px;
+  --ah-container-width: 1080px;
 }
 
 body {
