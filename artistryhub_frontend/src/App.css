@@ -443,6 +443,69 @@ html {
   flex-wrap: wrap;
 }
 
+/* --- Artwork Modal (Lightbox) Styling --- */
+.ah-modal-overlay {
+  animation: modalFadeIn 0.42s cubic-bezier(.42,1.4,.57,.98);
+  background: radial-gradient(circle at 70% 18%, #fffbe058 0%, rgba(58,32,51,0.16) 100%);
+  backdrop-filter: blur(3.5px);
+  transition: background 0.22s;
+}
+@keyframes modalFadeIn {
+  from { background: rgba(58,32,51,0.01); opacity: 0;}
+  to { background: rgba(58,32,51,0.18); opacity: 1;}
+}
+
+.ah-modal-content {
+  animation: modalPopIn 0.44s cubic-bezier(.42,1.6,.51,1.01);
+  background: var(--ah-secondary);
+  border-radius: 14px;
+  box-shadow: 0 12px 42px 0 var(--ah-primary), 0 2.5px 18px 0 #dcbb8a99;
+  border: 2.3px solid var(--ah-accent);
+}
+@keyframes modalPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.81) translateY(-42px) rotate(-8deg);
+    filter: blur(6px);
+    box-shadow: 0 0px 1px #ffd70008;
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.11) translateY(4px) rotate(3deg);
+    filter: blur(1.4px);
+    box-shadow: 0 10px 32px #80000038;
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+    box-shadow: 0 20px 42px #80000040, 0 1.5px 18px #dcbb8a99;
+  }
+}
+
+.ah-modal-content img {
+  transition: filter 0.21s, transform 0.22s;
+  box-shadow: 0 2px 18px #ffd70042, 0 3px 11px #80000021;
+  border-top-left-radius: 13px;
+  border-top-right-radius: 13px;
+}
+.ah-modal-content img:hover {
+  filter: brightness(1.07) saturate(1.12) drop-shadow(0 5px 16px #ffd70088);
+  transform: scale(1.02);
+}
+
+.ah-modal-close {
+  transition: background 0.18s, color 0.18s, box-shadow 0.13s, transform 0.14s;
+}
+.ah-modal-close:hover, .ah-modal-close:focus {
+  background: var(--ah-accent) !important;
+  color: var(--ah-primary) !important;
+  box-shadow: 0 2px 13px #ffd70064;
+  transform: scale(1.09) rotate(-10deg);
+  outline: none;
+}
+
+
 /* ---- Enhanced Marketplace Grid & Card Styles ---- */
 .ah-market-grid {
   display: grid;
